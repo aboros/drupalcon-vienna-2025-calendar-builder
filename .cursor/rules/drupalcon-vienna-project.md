@@ -14,7 +14,6 @@ This is a privacy-first, single-page web application that allows DrupalCon Vienn
 - **Icons**: Font Awesome 6.0.0
 - **Analytics**: Simple Analytics (privacy-first, optional)
 - **Storage**: Browser localStorage only
-- **Server**: Simple Python server (`server.py`) for local development
 
 ## File Structure
 
@@ -23,14 +22,7 @@ This is a privacy-first, single-page web application that allows DrupalCon Vienn
 ├── index.html              # Main SPA with embedded JavaScript
 ├── data/
 │   └── events.json        # Event data (manually updated)
-├── source/
-│   ├── convert/
-│   │   └── convert_schedule.py  # Script to parse source HTML
-│   └── drupalcon-schedule-source-data.html  # Source data
-├── server.py              # Simple HTTP server
-├── requirements.txt       # Python dependencies (beautifulsoup4)
-├── README.md             # Project documentation
-└── venv/                 # Python virtual environment
+└── README.md              # Project documentation
 ```
 
 ## Core Features
@@ -47,15 +39,15 @@ This is a privacy-first, single-page web application that allows DrupalCon Vienn
 - Click anywhere on event card to toggle selection
 - Checkbox also toggles selection
 - Selected events highlighted with Drupal blue theme
-- Selection state persisted to localStorage
-- Unsaved changes tracked and "Save" button enabled accordingly
+- Selection state automatically saved to localStorage immediately
+- Select all / Deselect all buttons for currently filtered events
 
 ### 3. Calendar Export
 
 - **Download ICS**: Creates `.ics` file for selected events
-- **Add to Calendar**: Opens calendar app with selected events
 - **Timezone**: Europe/Vienna (CET/CEST) with proper VTIMEZONE definitions
 - **Event Details**: Includes title, location, description, and session URL
+- **Format**: Standard iCalendar format compatible with all major calendar apps
 
 ### 4. Selection Overview Panel
 
@@ -70,6 +62,23 @@ This is a privacy-first, single-page web application that allows DrupalCon Vienn
 - No cookies
 - No user tracking (except optional Simple Analytics)
 - All data stored in browser's localStorage under key: `drupalconSelectedEvents`
+
+## Data Management
+
+### Data Files
+
+The application uses a single data file:
+- **Location**: `data/events.json`
+- **Format**: JSON with an `events` array
+- **Update Method**: Manual editing or external conversion
+- **Source**: DrupalCon Vienna 2025 official schedule
+
+### Data Update Workflow
+
+1. Event data is maintained in `data/events.json`
+2. File must be valid JSON following the event schema
+3. Application fetches this file on load via `fetch('data/events.json')`
+4. No server-side processing required
 
 ## Data Structure
 
@@ -109,27 +118,72 @@ This is a privacy-first, single-page web application that allows DrupalCon Vienn
 - `bof` (Birds of a Feather)
 - `other`
 
+## HTML Structure
+
+### Main Components in index.html
+
+1. **Header Section**
+   - Title and branding
+   - Navigation area (if applicable)
+
+2. **Usage Instructions Section**
+   - Brief instructions for users
+   - Displayed at the top of the page
+
+3. **Filters and Controls Panel** (`bg-white rounded-lg shadow-md`)
+   - Keywords filter (full-width)
+   - Date, Track, and Selection filters (3-column grid)
+   - Action buttons: Reset filters, Select all, Deselect all
+
+4. **Selection Overview Panel** (Fixed bottom panel, `#selectionOverview`)
+   - Collapsible panel showing selected events summary
+   - Expandable details with track/day breakdowns
+   - Download ICS button
+
+5. **Events Container** (`#eventsContainer`)
+   - Dynamically populated with event cards
+   - Events grouped by date and time slot
+   - Responsive grid layout
+
+6. **Credits Section** (`#creditsContainer`)
+   - Attribution and privacy notice
+
+### Embedded Script Structure
+
+The `index.html` contains all JavaScript inline within a `<script>` tag at the bottom of the body:
+- Event handlers are initialized in DOMContentLoaded
+- All functions are defined in global scope
+- Simple Analytics script loaded separately
+
 ## Key JavaScript Architecture
 
 ### Global State
 
 ```javascript
 window.selectedEvents      // Set of selected event IDs
-window.lastSavedState      // Set of last saved state (for dirty checking)
 window.allEvents           // Array of all events (reference)
+window.displayedEvents     // Currently filtered/displayed events
 ```
+
+**Note**: Selections are automatically saved to localStorage immediately upon change, not batched.
 
 ### Core Functions
 
 | Function | Purpose |
 |----------|---------|
+| `init()` | Initializes the application on DOMContentLoaded |
 | `fetchEvents()` | Loads and processes events.json |
-| `displayEvents(events)` | Renders event list |
+| `displayEvents(events)` | Renders event list (delegates to displayListView) |
+| `displayListView(events, container)` | Renders events in list/card view |
 | `filterEvents(events, filterName, skipAnalytics)` | Applies all active filters |
-| `toggleEventSelection(eventId)` | Handles selection toggle |
+| `toggleEventSelection(eventId)` | Handles selection toggle and localStorage save |
+| `selectAllDisplayed(events)` | Selects all currently filtered events |
+| `deselectAllDisplayed(events)` | Deselects all currently filtered events |
 | `generateIcsContent(events)` | Creates ICS calendar format |
+| `downloadSelectedEvents(events)` | Triggers ICS file download |
 | `updateSelectionOverview(events)` | Updates bottom panel stats |
-| `saveSelections()` | Persists to localStorage |
+| `updateStageStats(stageStats)` | Updates track and day statistics in overview |
+| `updateDownloadButton()` | Enables/disables download button |
 
 ### Utility Functions
 
@@ -137,9 +191,16 @@ window.allEvents           // Array of all events (reference)
 |----------|---------|
 | `formatDate(dateString)` | Human-readable date/time |
 | `formatDuration(duration)` | Converts PT1H30M to "1 hour 30 minutes" |
+| `formatDateForICS(dateString)` | Formats date for ICS file format |
 | `highlightKeywords(text, keywords)` | Adds highlighting spans |
 | `debounce(func, wait)` | Debounces rapid function calls |
-| `areSetsEqual(set1, set2)` | Compares two Sets |
+| `groupEventsByDate(events)` | Groups events by date |
+| `groupEventsByStartTime(events)` | Groups events by start time |
+| `toggleClearButton()` | Shows/hides keywords clear button |
+| `clearKeywordsFilter(events)` | Clears keywords and re-filters |
+| `resetFilters(events)` | Resets all filters to default |
+| `toggleDayExpansion(dayId)` | Toggles day details in overview |
+| `toggleTrackExpansion(trackId)` | Toggles track details in overview |
 
 ## Styling Conventions
 
@@ -191,35 +252,20 @@ window.allEvents           // Array of all events (reference)
 
 | Event Name | Trigger |
 |------------|---------|
-| `addSession` | When event selected |
-| `removeSession` | When event deselected |
-| `addToTrack` | Track added to selection |
-| `removeFromTrack` | Track removed from selection |
-| `dateFilter` | Date filter changed |
-| `trackFilter` | Track filter changed |
-| `keywordsFilter` | Keywords entered (debounced) |
-| `selectionFilter` | Selection filter changed |
-| `download_ics` | ICS file downloaded |
-| `add_to_calendar` | Add to calendar clicked |
-| `save_selections` | Selections saved |
+| `addSession` | When event selected (with session metadata) |
+| `removeSession` | When event deselected (with session metadata) |
+| `addToTrack` | Track added to selection (with track metadata) |
+| `removeFromTrack` | Track removed from selection (with track metadata) |
+| `dateFilter` | Date filter changed (with filter_value) |
+| `trackFilter` | Track filter changed (with filter_value) |
+| `keywordsFilter` | Keywords entered (debounced 2s, with filter_value) |
+| `selectionFilter` | Selection filter changed (with filter_value) |
+| `reset_filters` | Reset filters button clicked |
+| `select_all_displayed` | Select all displayed events (with count) |
+| `deselect_all_displayed` | Deselect all displayed events (with count) |
+| `download_ics` | ICS file downloaded (with total_events and total_duration) |
 | `selection_details_opened` | Details panel expanded |
 | `selection_details_closed` | Details panel collapsed |
-
-## Development Workflow
-
-### Data Updates
-
-1. Source HTML placed in `source/drupalcon-schedule-source-data.html`
-2. Run `source/convert/convert_schedule.py` to parse and generate JSON
-3. Output written to `data/events.json`
-4. Commit both source and generated files
-
-### Local Testing
-
-```bash
-python server.py
-# Then open http://localhost:8000
-```
 
 ## Code Quality Guidelines
 
@@ -236,13 +282,15 @@ python server.py
 ### Testing Checklist
 
 - [ ] Filter combinations work correctly
-- [ ] LocalStorage saves/loads properly
-- [ ] ICS files download with correct timezone
-- [ ] Selection overview shows accurate statistics
-- [ ] Keyword highlighting works across all fields
-- [ ] Responsive design works on mobile
-- [ ] Clear button appears/disappears correctly
-- [ ] Unsaved changes detection works
+- [ ] LocalStorage saves/loads properly (automatic on selection change)
+- [ ] ICS files download with correct timezone (Europe/Vienna)
+- [ ] Selection overview shows accurate statistics (by track and by day)
+- [ ] Keyword highlighting works across all fields (title, speaker, track, location)
+- [ ] Responsive design works on mobile (cards stack properly)
+- [ ] Clear button appears/disappears correctly (keywords filter)
+- [ ] Select all / Deselect all work with filtered results
+- [ ] Selection overview panel slides up/down correctly
+- [ ] Track and day expansion toggles work in overview panel
 
 ## Known Limitations
 
