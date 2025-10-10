@@ -1819,6 +1819,16 @@
       "description": "",
       "link": "https://events.drupal.org/vienna2025/session/drupalcamp-england",
       "track": "bof"
+    },
+    {
+      "startTime": "2025-10-16T15:00:00",
+      "endTime": "2025-10-16T15:45:00",
+      "duration": "PT45M",
+      "summary": "How to concentrate in a meeting",
+      "location": "Room BoF (-2.66)",
+      "description": "Antje Lorch (Ifrik)",
+      "link": "https://events.drupal.org/vienna2025/session/how-concentrate-meeting",
+      "track": "bof"
     }
   ]
 }
