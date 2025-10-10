@@ -512,9 +512,46 @@
             return dateString.replace(/[-:]/g, '').replace(/\.\d+/, '');
         }
 
+        // Helper function to fold long lines according to RFC 5545
+        // Lines should not exceed 75 characters (octets)
+        function foldICSLine(line) {
+            if (line.length <= 75) {
+                return line;
+            }
+            
+            const result = [];
+            let currentPos = 0;
+            
+            // First line can be 75 characters
+            result.push(line.substring(0, 75));
+            currentPos = 75;
+            
+            // Subsequent lines should be 74 characters (to account for the leading space)
+            while (currentPos < line.length) {
+                result.push(' ' + line.substring(currentPos, currentPos + 74));
+                currentPos += 74;
+            }
+            
+            return result.join('\r\n');
+        }
+
+        // Helper function to generate current timestamp in ICS format
+        function getCurrentTimestampICS() {
+            const now = new Date();
+            const year = now.getUTCFullYear();
+            const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(now.getUTCDate()).padStart(2, '0');
+            const hours = String(now.getUTCHours()).padStart(2, '0');
+            const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(now.getUTCSeconds()).padStart(2, '0');
+            return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
+        }
+
         // Generate ICS content for selected events
         function generateIcsContent(events) {
             const selectedEvents = events.filter(event => window.selectedEvents.has(event.id));
+            const dtstamp = getCurrentTimestampICS();
+            
             const icsEvents = selectedEvents.map(event => {
                 // Format times preserving the local timezone
                 const start = formatDateForICS(event.startTime);
@@ -523,43 +560,58 @@
                 // Generate a unique UID for the event
                 const uid = `${event.id}@drupalcon-vienna-2025`;
                 
-                // Escape special characters in description for ICS format
+                // Escape special characters in all text fields for ICS format
+                // Newlines, commas, semicolons, and backslashes need to be escaped
+                const escapedSummary = (event.summary || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
+                const escapedLocation = (event.location || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
+                
                 // Add URL before the description
                 const urlPart = event.link ? `${event.link}\\n\\n` : '';
-                const description = urlPart + (event.description || '').replace(/\n/g, '\\n').replace(/,/g, '\\,');
+                const escapedDescription = urlPart + (event.description || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
                 
-                return `BEGIN:VEVENT
-UID:${uid}
-DTSTART;TZID=Europe/Vienna:${start}
-DTEND;TZID=Europe/Vienna:${end}
-SUMMARY:${event.summary}
-LOCATION:${event.location}
-DESCRIPTION:${description}
-END:VEVENT`;
-            }).join('\n');
+                // Build event with proper CRLF line endings
+                const eventLines = [
+                    'BEGIN:VEVENT',
+                    foldICSLine(`UID:${uid}`),
+                    foldICSLine(`DTSTAMP:${dtstamp}`),
+                    foldICSLine(`DTSTART;TZID=Europe/Vienna:${start}`),
+                    foldICSLine(`DTEND;TZID=Europe/Vienna:${end}`),
+                    foldICSLine(`SUMMARY:${escapedSummary}`),
+                    foldICSLine(`LOCATION:${escapedLocation}`),
+                    foldICSLine(`DESCRIPTION:${escapedDescription}`),
+                    'END:VEVENT'
+                ];
+                
+                return eventLines.join('\r\n');
+            }).join('\r\n');
 
-            return `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//DrupalCon Vienna 2025//EN
-X-WR-CALNAME:DrupalCon Vienna 2025
-X-WR-TIMEZONE:Europe/Vienna
-BEGIN:VTIMEZONE
-TZID:Europe/Vienna
-BEGIN:STANDARD
-DTSTART:19701025T030000
-RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
-TZOFFSETFROM:+0200
-TZOFFSETTO:+0100
-END:STANDARD
-BEGIN:DAYLIGHT
-DTSTART:19700329T020000
-RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
-TZOFFSETFROM:+0100
-TZOFFSETTO:+0200
-END:DAYLIGHT
-END:VTIMEZONE
-${icsEvents}
-END:VCALENDAR`;
+            // Build complete calendar with proper CRLF line endings
+            const calendarLines = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//DrupalCon Vienna 2025//EN',
+                'X-WR-CALNAME:DrupalCon Vienna 2025',
+                'X-WR-TIMEZONE:Europe/Vienna',
+                'BEGIN:VTIMEZONE',
+                'TZID:Europe/Vienna',
+                'BEGIN:STANDARD',
+                'DTSTART:19701025T030000',
+                'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
+                'TZOFFSETFROM:+0200',
+                'TZOFFSETTO:+0100',
+                'END:STANDARD',
+                'BEGIN:DAYLIGHT',
+                'DTSTART:19700329T020000',
+                'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU',
+                'TZOFFSETFROM:+0100',
+                'TZOFFSETTO:+0200',
+                'END:DAYLIGHT',
+                'END:VTIMEZONE',
+                icsEvents,
+                'END:VCALENDAR'
+            ];
+            
+            return calendarLines.join('\r\n');
         }
 
         // Shared function to trigger ICS download

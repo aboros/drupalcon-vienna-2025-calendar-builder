@@ -191,7 +191,9 @@ window.displayedEvents     // Currently filtered/displayed events
 |----------|---------|
 | `formatDate(dateString)` | Human-readable date/time |
 | `formatDuration(duration)` | Converts PT1H30M to "1 hour 30 minutes" |
-| `formatDateForICS(dateString)` | Formats date for ICS file format |
+| `formatDateForICS(dateString)` | Formats date for ICS file format (removes separators) |
+| `foldICSLine(line)` | Folds lines >75 chars per RFC 5545 with CRLF |
+| `getCurrentTimestampICS()` | Generates current UTC timestamp for DTSTAMP |
 | `highlightKeywords(text, keywords)` | Adds highlighting spans |
 | `debounce(func, wait)` | Debounces rapid function calls |
 | `groupEventsByDate(events)` | Groups events by date |
@@ -226,11 +228,46 @@ window.displayedEvents     // Currently filtered/displayed events
 
 ### ICS File Generation
 
+The application generates RFC 5545 compliant iCalendar files:
+
+#### Timezone Handling
 - Uses **Europe/Vienna** timezone (TZID)
 - Includes VTIMEZONE definition with DST rules
 - Preserves local times (no UTC conversion)
-- Escapes special characters in descriptions (commas, newlines)
-- Includes session URL at start of description
+- DTSTAMP property uses UTC timestamp
+
+#### RFC 5545 Compliance
+
+**Line Endings**
+- All lines must use CRLF (`\r\n`) - not just LF (`\n`)
+- Template literals must be avoided in ICS generation
+- Build ICS content using arrays joined with `\r\n`
+
+**Line Folding**
+- Lines must not exceed 75 characters (octets)
+- Continuation lines must start with a single space
+- Folding happens AFTER escaping special characters
+- Function: `foldICSLine()` handles proper line folding with CRLF
+
+**Character Escaping** (in this order)
+1. Backslashes: `\` → `\\`
+2. Newlines: `\n` → `\\n`
+3. Commas: `,` → `\\,`
+4. Semicolons: `;` → `\\;`
+
+Applied to ALL text fields: SUMMARY, LOCATION, DESCRIPTION
+
+**Required Fields per VEVENT**
+- `UID`: Unique identifier
+- `DTSTAMP`: Creation timestamp (UTC format: `YYYYMMDDTHHmmssZ`)
+- `DTSTART`: Event start time
+- `DTEND`: Event end time
+- `SUMMARY`: Event title
+
+#### Implementation Details
+- Session URL prepended to DESCRIPTION field
+- Each VEVENT uses same DTSTAMP (file creation time)
+- Event UID format: `{event.id}@drupalcon-vienna-2025`
 
 ### Keyword Search
 
@@ -284,6 +321,9 @@ window.displayedEvents     // Currently filtered/displayed events
 - [ ] Filter combinations work correctly
 - [ ] LocalStorage saves/loads properly (automatic on selection change)
 - [ ] ICS files download with correct timezone (Europe/Vienna)
+- [ ] ICS files pass RFC 5545 validation (use online validator)
+- [ ] ICS files handle special characters correctly (newlines, commas, semicolons in titles/descriptions)
+- [ ] ICS lines are properly folded (max 75 chars) and use CRLF line endings
 - [ ] Selection overview shows accurate statistics (by track and by day)
 - [ ] Keyword highlighting works across all fields (title, speaker, track, location)
 - [ ] Responsive design works on mobile (cards stack properly)
@@ -291,6 +331,33 @@ window.displayedEvents     // Currently filtered/displayed events
 - [ ] Select all / Deselect all work with filtered results
 - [ ] Selection overview panel slides up/down correctly
 - [ ] Track and day expansion toggles work in overview panel
+
+## Common Issues & Troubleshooting
+
+### ICS Validation Errors
+
+**Problem**: "Lines not delimited by CRLF sequence"
+- **Cause**: Using `\n` instead of `\r\n` or mixing template literal newlines
+- **Solution**: Build ICS using arrays joined with `\r\n`, avoid template literals with embedded newlines
+
+**Problem**: "Missing colon ':' in line"
+- **Cause**: Unescaped newlines in text fields breaking line structure
+- **Solution**: Escape all newlines (`\n` → `\\n`) in SUMMARY, LOCATION, DESCRIPTION before folding
+
+**Problem**: "Line length should not be longer than 75 characters"
+- **Cause**: Long text fields not being folded
+- **Solution**: Use `foldICSLine()` on all property lines
+
+**Problem**: "Missing DTSTAMP property"
+- **Cause**: DTSTAMP field not included in VEVENT
+- **Solution**: Add DTSTAMP with UTC timestamp to every VEVENT
+
+### ICS Validation Best Practices
+
+1. **Test with multiple calendar apps**: Apple Calendar, Google Calendar, Outlook
+2. **Use online validators**: icalendar.org/validator.html or similar
+3. **Test edge cases**: Events with long titles, special characters, URLs in descriptions
+4. **Verify timezones**: Ensure times display correctly in recipient's calendar
 
 ## Known Limitations
 
