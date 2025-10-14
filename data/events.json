@@ -1829,6 +1829,16 @@
       "description": "Antje Lorch (Ifrik)",
       "link": "https://events.drupal.org/vienna2025/session/how-concentrate-meeting",
       "track": "bof"
+    },
+    {
+      "startTime": "2025-10-15T16:15:00",
+      "endTime": "2025-10-15T17:00:00",
+      "duration": "PT45M",
+      "summary": "Status and Goals of the Drupal Open University Initiative",
+      "location": "Session Room (Hall G1)",
+      "description": "Hilmar Hallbjörnsson (Drupalviking), Jean-Paul Vosmeer (Jpvos), Rachel Lawson (Rachel_norfolk), Lenny Moskalyk (Lenny Moskalyk)",
+      "link": "https://events.drupal.org/vienna2025/session/status-and-goals-drupal-open-university-initiative",
+      "track": "community health"
     }
   ]
 }
