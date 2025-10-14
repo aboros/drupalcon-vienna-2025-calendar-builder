@@ -74,7 +74,7 @@
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-4">
-                    <h1 class="text-2xl font-bold">DrupalCon Vienna 2025 - Custom Schedule Builder</h1>
+                    <h1 class="text-2xl font-bold">DrupalCon Nara 2025 - Custom Schedule Builder</h1>
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
             <!-- Events will be dynamically inserted here -->
         </div>
         <div id="creditsContainer" class="text-center p-4 mb-24">
-            <p class="text-sm text-gray-600">This is a custom schedule builder for <a href="https://events.drupal.org/vienna2025" target="_blank" class="drupal-blue-text">DrupalCon Vienna 2025</a>. It is not affiliated with DrupalCon Vienna 2025.</p>
+            <p class="text-sm text-gray-600">This is a custom schedule builder for <a href="https://events.drupal.org/nara2025" target="_blank" class="drupal-blue-text">DrupalCon Nara 2025</a>. It is not affiliated with DrupalCon Nara 2025.</p>
             <p class="text-sm text-gray-600 my-2">Proudly built by <a href="https://www.drupal.org/u/aboros" target="_blank" class="drupal-blue-text">aboros</a> from pure love of <a href="https://www.drupal.org" target="_blank" class="drupal-blue-text">Drupal</a>.</p>
             <p class="text-sm text-gray-600">No tracking, no cookies, no data collection. 100% privacy-first analytics.</p>
         </div>
@@ -552,10 +552,10 @@
             filterEvents(window.allEvents);
         }
 
-        // Helper function to format date for ICS in Vienna timezone
+        // Helper function to format date for ICS in Nara timezone
         function formatDateForICS(dateString) {
             // Parse the ISO date string directly to avoid timezone conversion issues
-            // The source data is in Vienna time, so we preserve it as-is
+            // The source data is in Nara time, so we preserve it as-is
             // Format: "2025-10-14T09:30:00" -> "20251014T093000"
             return dateString.replace(/[-:]/g, '').replace(/\.\d+/, '');
         }
@@ -606,7 +606,7 @@
                 const end = formatDateForICS(event.endTime);
                 
                 // Generate a unique UID for the event
-                const uid = `${event.id}@drupalcon-vienna-2025`;
+                const uid = `${event.id}@drupalcon-nara-2025`;
                 
                 // Escape special characters in all text fields for ICS format
                 // Newlines, commas, semicolons, and backslashes need to be escaped
@@ -622,8 +622,8 @@
                     'BEGIN:VEVENT',
                     foldICSLine(`UID:${uid}`),
                     foldICSLine(`DTSTAMP:${dtstamp}`),
-                    foldICSLine(`DTSTART;TZID=Europe/Vienna:${start}`),
-                    foldICSLine(`DTEND;TZID=Europe/Vienna:${end}`),
+                    foldICSLine(`DTSTART;TZID=Europe/Nara:${start}`),
+                    foldICSLine(`DTEND;TZID=Europe/Nara:${end}`),
                     foldICSLine(`SUMMARY:${escapedSummary}`),
                     foldICSLine(`LOCATION:${escapedLocation}`),
                     foldICSLine(`DESCRIPTION:${escapedDescription}`),
@@ -637,11 +637,11 @@
             const calendarLines = [
                 'BEGIN:VCALENDAR',
                 'VERSION:2.0',
-                'PRODID:-//DrupalCon Vienna 2025//EN',
-                'X-WR-CALNAME:DrupalCon Vienna 2025',
-                'X-WR-TIMEZONE:Europe/Vienna',
+                'PRODID:-//DrupalCon Nara 2025//EN',
+                'X-WR-CALNAME:DrupalCon Nara 2025',
+                'X-WR-TIMEZONE:Europe/Nara',
                 'BEGIN:VTIMEZONE',
-                'TZID:Europe/Vienna',
+                'TZID:Asia/Nara',
                 'BEGIN:STANDARD',
                 'DTSTART:19701025T030000',
                 'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
@@ -684,7 +684,7 @@
 
         // Download selected events as ICS file
         function downloadSelectedEvents(events) {
-            triggerIcsDownload(events, 'drupalcon-vienna-2025-selected-events.ics', 'download_ics');
+            triggerIcsDownload(events, 'drupalcon-nara-2025-selected-events.ics', 'download_ics');
         }
 
         // Display events in the current view
