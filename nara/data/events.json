@@ -1,0 +1,504 @@
+{
+  "events": [
+    {
+      "startTime": "2025-11-17T08:30:00",
+      "endTime": "2025-11-17T09:30:00",
+      "duration": "PT1H",
+      "summary": "Registration",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/registration",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T09:30:00",
+      "endTime": "2025-11-17T09:55:00",
+      "duration": "PT25M",
+      "summary": "Welcome",
+      "location": "Hiten C/D",
+      "description": "Gen Nakagawa",
+      "link": "https://events.drupal.org/nara2025/session/welcome",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T09:55:00",
+      "endTime": "2025-11-17T10:55:00",
+      "duration": "PT1H",
+      "summary": "A conversation with Drupal\u2019s founder and project lead, Dries Buytaert",
+      "location": "Hiten C/D",
+      "description": "Dries Buytaert",
+      "link": "https://events.drupal.org/nara2025/session/conversation-drupals-founder-and-project-lead-dries-buytaert",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T10:00:00",
+      "endTime": "2025-11-17T18:10:00",
+      "duration": "PT8H10M",
+      "summary": "General Contribution Day 1",
+      "location": "Contribution",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/general-contribution-day-1",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T10:55:00",
+      "endTime": "2025-11-17T11:05:00",
+      "duration": "PT10M",
+      "summary": "Group Photo",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/group-photo",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T11:05:00",
+      "endTime": "2025-11-17T11:25:00",
+      "duration": "PT20M",
+      "summary": "Morning Break",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/morning-break",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T11:25:00",
+      "endTime": "2025-11-17T12:10:00",
+      "duration": "PT45M",
+      "summary": "Drupal CMS now and beyond",
+      "location": "Hiten A",
+      "description": "pameeela,ckrina",
+      "link": "https://events.drupal.org/nara2025/session/drupal-cms-now-and-beyond",
+      "track": "drupal cms"
+    },
+    {
+      "startTime": "2025-11-17T11:25:00",
+      "endTime": "2025-11-17T11:45:00",
+      "duration": "PT20M",
+      "summary": "First things to keep in mind when building a worldwide multi-site, multilingual site with Drupal",
+      "location": "Hiten B",
+      "description": "ken_taguchi",
+      "link": "https://events.drupal.org/nara2025/session/first-things-keep-mind-when-building-worldwide-multi-site-multilingual-site-drupal",
+      "track": "leadership and business / \u30ea\u30fc\u30c0\u30fc\u30b7\u30c3\u30d7\u3001\u30d3\u30b8\u30cd\u30b9"
+    },
+    {
+      "startTime": "2025-11-17T11:25:00",
+      "endTime": "2025-11-17T12:10:00",
+      "duration": "PT45M",
+      "summary": "How to sell Drupal in AI times",
+      "location": "Hiten C/D",
+      "description": "nielsaers",
+      "link": "https://events.drupal.org/nara2025/session/how-sell-drupal-ai-times",
+      "track": "leadership and business / \u30ea\u30fc\u30c0\u30fc\u30b7\u30c3\u30d7\u3001\u30d3\u30b8\u30cd\u30b9"
+    },
+    {
+      "startTime": "2025-11-17T12:10:00",
+      "endTime": "2025-11-17T13:10:00",
+      "duration": "PT1H",
+      "summary": "Lunch",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/lunch",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T13:10:00",
+      "endTime": "2025-11-17T13:55:00",
+      "duration": "PT45M",
+      "summary": "That's Not a Theme, It's a Template",
+      "location": "Hiten B",
+      "description": "elliott.mower",
+      "link": "https://events.drupal.org/nara2025/session/thats-not-theme-its-template",
+      "track": "ux, accessibility, and design / ux\u3001\u30a2\u30af\u30bb\u30b7\u30d3\u30ea\u30c6\u30a3\u3001\u30c7\u30b6\u30a4\u30f3"
+    },
+    {
+      "startTime": "2025-11-17T13:10:00",
+      "endTime": "2025-11-17T13:55:00",
+      "duration": "PT45M",
+      "summary": "\u9577\u671f\u904b\u7528\u306e\u305f\u3081\u306eDrupal\u958b\u767a\u5165\u9580",
+      "location": "Hiten A",
+      "description": "kazukomurata",
+      "link": "https://events.drupal.org/nara2025/session/zhangqiyunyongnotamenodrupalkaifarumen",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-17T14:10:00",
+      "endTime": "2025-11-17T14:55:00",
+      "duration": "PT45M",
+      "summary": "Beyond Iframes: Modern Embedding in Drupal with Media and oEmbed",
+      "location": "Hiten A",
+      "description": "pcambra",
+      "link": "https://events.drupal.org/nara2025/session/beyond-iframes-modern-embedding-drupal-media-and-oembed",
+      "track": "site building / \u30b5\u30a4\u30c8\u69cb\u7bc9"
+    },
+    {
+      "startTime": "2025-11-17T14:10:00",
+      "endTime": "2025-11-17T14:55:00",
+      "duration": "PT45M",
+      "summary": "Lessons from Integrating AI Into Real Marketing Teams",
+      "location": "Hiten B",
+      "description": "saxenaakansha30",
+      "link": "https://events.drupal.org/nara2025/session/lessons-integrating-ai-real-marketing-teams",
+      "track": "content and marketing / \u30b3\u30f3\u30c6\u30f3\u30c4\u3068\u30de\u30fc\u30b1\u30c6\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-17T14:10:00",
+      "endTime": "2025-11-17T14:40:00",
+      "duration": "PT30M",
+      "summary": "Reserved Session Slot",
+      "location": "Hiten C/D",
+      "description": "Masami",
+      "link": "https://events.drupal.org/nara2025/session/reserved-session-slot",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T14:55:00",
+      "endTime": "2025-11-17T15:15:00",
+      "duration": "PT20M",
+      "summary": "Afternoon Break",
+      "location": "Hiten B",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/afternoon-break",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T15:15:00",
+      "endTime": "2025-11-17T15:35:00",
+      "duration": "PT20M",
+      "summary": "Drupal\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u306e\u6210\u529f\u306f\u3001\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u30de\u30cd\u30fc\u30b8\u30e3\u30fc\u30fb\u30b9\u30af\u30e9\u30e0\u30de\u30b9\u30bf\u30fc\u30fbUX\u30c7\u30b6\u30a4\u30ca\u30fc\u306e\u529b\u3067\u52a0\u901f\u3059\u308b\u2015\u591a\u69d8\u306a\u8996\u70b9\u3092\u5dfb\u304d\u8fbc\u3080MeetupNara\u306e\u6311\u6226\u2015",
+      "location": "Hiten C/D",
+      "description": "Miki Yoshida, Misako Fukagawa",
+      "link": "https://events.drupal.org/nara2025/session",
+      "track": "community health / \u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30d8\u30eb\u30b9"
+    },
+    {
+      "startTime": "2025-11-17T15:15:00",
+      "endTime": "2025-11-17T15:30:00",
+      "duration": "PT15M",
+      "summary": "Epic things you built with Drupal AI",
+      "location": "Hiten B",
+      "description": "schnitzel",
+      "link": "https://events.drupal.org/nara2025/session/epic-things-you-built-drupal-ai",
+      "track": "sponsored session"
+    },
+    {
+      "startTime": "2025-11-17T15:30:00",
+      "endTime": "2025-11-17T16:00:00",
+      "duration": "PT30M",
+      "summary": "Drupal Asia Steering Committee Panel",
+      "location": "Hiten B",
+      "description": "Michael Richardson",
+      "link": "https://events.drupal.org/nara2025/session/drupal-asia-steering-committee-panel",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T15:40:00",
+      "endTime": "2025-11-17T16:00:00",
+      "duration": "PT20M",
+      "summary": "\u6539\u3081\u3066\u632f\u308a\u8fd4\u308bDrupal\u306e\u30e2\u30b8\u30e5\u30fc\u30eb/\u30c6\u30fc\u30de\u306e\u30c7\u30d0\u30c3\u30b0\u65b9\u6cd5",
+      "location": "Hiten C/D",
+      "description": "otofu",
+      "link": "https://events.drupal.org/nara2025/session/gaimetezhenrifanrudrupalnomoshiyurutemanotehatsukufangfa",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-17T16:15:00",
+      "endTime": "2025-11-17T17:00:00",
+      "duration": "PT45M",
+      "summary": "Beyond CMS: Exploring Drupal\u2019s Potential as an AI LLM Builder",
+      "location": "Hiten B",
+      "description": "Masami,Akihito.Kimura@ntt.com",
+      "link": "https://events.drupal.org/nara2025/session/beyond-cms-exploring-drupals-potential-ai-llm-builder",
+      "track": "drupal showcase / drupal\u30b7\u30e7\u30fc\u30b1\u30fc\u30b9"
+    },
+    {
+      "startTime": "2025-11-17T16:15:00",
+      "endTime": "2025-11-17T17:00:00",
+      "duration": "PT45M",
+      "summary": "Drupal Commerce's Starshot Roadmap",
+      "location": "Hiten A",
+      "description": "zaporylie,jsacksick",
+      "link": "https://events.drupal.org/nara2025/session/drupal-commerces-starshot-roadmap",
+      "track": "drupal showcase / drupal\u30b7\u30e7\u30fc\u30b1\u30fc\u30b9"
+    },
+    {
+      "startTime": "2025-11-17T16:15:00",
+      "endTime": "2025-11-17T17:00:00",
+      "duration": "PT45M",
+      "summary": "Global Reach, One Platform: The Journey to Implementing Multilingual in Drupal CMS",
+      "location": "Hiten C/D",
+      "description": "anjali-rathod,ygoex",
+      "link": "https://events.drupal.org/nara2025/session/global-reach-one-platform-journey-implementing-multilingual-drupal-cms",
+      "track": "ux, accessibility, and design / ux\u3001\u30a2\u30af\u30bb\u30b7\u30d3\u30ea\u30c6\u30a3\u3001\u30c7\u30b6\u30a4\u30f3"
+    },
+    {
+      "startTime": "2025-11-17T16:15:00",
+      "endTime": "2025-11-17T17:00:00",
+      "duration": "PT45M",
+      "summary": "How to become a Drupal Certified Partner agency(BoF)",
+      "location": "BoF Space",
+      "description": "Tim Doyle",
+      "link": "https://events.drupal.org/nara2025/session/how-become-drupal-certified-partner-agencybof",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-17T18:15:00",
+      "endTime": "2025-11-17T20:00:00",
+      "duration": "PT1H45M",
+      "summary": "Networking Drinks",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/networking-drinks",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-18T09:00:00",
+      "endTime": "2025-11-18T17:15:00",
+      "duration": "PT8H15M",
+      "summary": "General Contribution Day 2",
+      "location": "Contribution",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/general-contribution-day-2",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-18T09:00:00",
+      "endTime": "2025-11-18T09:15:00",
+      "duration": "PT15M",
+      "summary": "Welcome",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/welcome-0",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-18T09:15:00",
+      "endTime": "2025-11-18T10:00:00",
+      "duration": "PT45M",
+      "summary": "Inside Sharp: How a Global Brand Powers Digital Innovation with Drupal",
+      "location": "Hiten C/D",
+      "description": "Jason Cort",
+      "link": "https://events.drupal.org/nara2025/session/inside-sharp-how-global-brand-powers-digital-innovation-drupal",
+      "track": "drupal showcase / drupal\u30b7\u30e7\u30fc\u30b1\u30fc\u30b9"
+    },
+    {
+      "startTime": "2025-11-18T10:00:00",
+      "endTime": "2025-11-18T10:15:00",
+      "duration": "PT15M",
+      "summary": "Morning Break",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/morning-break-0",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-18T10:15:00",
+      "endTime": "2025-11-18T11:00:00",
+      "duration": "PT45M",
+      "summary": "Brilliant, But Doubting: Imposter Syndrome and the Experience of Women in Tech",
+      "location": "Hiten B",
+      "description": "gargsuchi,JCT321",
+      "link": "https://events.drupal.org/nara2025/session/brilliant-doubting-imposter-syndrome-and-experience-women-tech",
+      "track": "community health / \u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30d8\u30eb\u30b9"
+    },
+    {
+      "startTime": "2025-11-18T10:15:00",
+      "endTime": "2025-11-18T11:00:00",
+      "duration": "PT45M",
+      "summary": "Further Empowering Drupal with Single Directory Components using UI Suite",
+      "location": "Hiten A",
+      "description": "drupak",
+      "link": "https://events.drupal.org/nara2025/session/further-empowering-drupal-single-directory-components-using-ui-suite",
+      "track": "site building / \u30b5\u30a4\u30c8\u69cb\u7bc9"
+    },
+    {
+      "startTime": "2025-11-18T10:15:00",
+      "endTime": "2025-11-18T11:00:00",
+      "duration": "PT45M",
+      "summary": "Next steps for Experience Builder",
+      "location": "Hiten C/D",
+      "description": "lauriii",
+      "link": "https://events.drupal.org/nara2025/session/next-steps-experience-builder",
+      "track": "drupal cms"
+    },
+    {
+      "startTime": "2025-11-18T11:15:00",
+      "endTime": "2025-11-18T12:00:00",
+      "duration": "PT45M",
+      "summary": "Don\u2019t Write Code, Start Prompting! AI Orchestration of Digital",
+      "location": "Hiten C/D",
+      "description": "yas",
+      "link": "https://events.drupal.org/nara2025/session/dont-write-code-start-prompting-ai-orchestration-digital",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-18T11:15:00",
+      "endTime": "2025-11-18T12:00:00",
+      "duration": "PT45M",
+      "summary": "Migrate API\u3067\u79fb\u884c (\u30a4\u30b3\u30fc)",
+      "location": "Hiten B",
+      "description": "Matthew Messmer,aniketto",
+      "link": "https://events.drupal.org/nara2025/session/migrate-apiteyixing-iko",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-18T11:15:00",
+      "endTime": "2025-11-18T12:00:00",
+      "duration": "PT45M",
+      "summary": "The future of Drupal core and the ecosystem in the age of Drupal CMS",
+      "location": "Hiten A",
+      "description": "g\u00e1bor hojtsy",
+      "link": "https://events.drupal.org/nara2025/session/future-drupal-core-and-ecosystem-age-drupal-cms",
+      "track": "drupal cms"
+    },
+    {
+      "startTime": "2025-11-18T12:00:00",
+      "endTime": "2025-11-18T13:00:00",
+      "duration": "PT1H",
+      "summary": "Lunch",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/lunch-0",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-18T13:00:00",
+      "endTime": "2025-11-18T13:45:00",
+      "duration": "PT45M",
+      "summary": "How can we manage AI training data safely and efficiently?",
+      "location": "Hiten B",
+      "description": "umekikazuya,sachikonitta",
+      "link": "https://events.drupal.org/nara2025/session/how-can-we-manage-ai-training-data-safely-and-efficiently",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-18T13:00:00",
+      "endTime": "2025-11-18T13:45:00",
+      "duration": "PT45M",
+      "summary": "Recipes: It's About Time!",
+      "location": "Hiten C/D",
+      "description": "mandclu",
+      "link": "https://events.drupal.org/nara2025/session/recipes-its-about-time",
+      "track": "drupal cms"
+    },
+    {
+      "startTime": "2025-11-18T13:00:00",
+      "endTime": "2025-11-18T13:15:00",
+      "duration": "PT15M",
+      "summary": "The Future of Workflow Optimization with AI & Drupal Canvas",
+      "location": "Hiten A",
+      "description": "Maggie Schroeder,shumpei",
+      "link": "https://events.drupal.org/nara2025/session/future-workflow-optimization-ai-drupal-canvas",
+      "track": "sponsored session"
+    },
+    {
+      "startTime": "2025-11-18T14:00:00",
+      "endTime": "2025-11-18T14:45:00",
+      "duration": "PT45M",
+      "summary": "Declarative Shadow DOM and the future of Drupal Theming",
+      "location": "Hiten A",
+      "description": "JohnAlbin",
+      "link": "https://events.drupal.org/nara2025/session/declarative-shadow-dom-and-future-drupal-theming",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-18T14:00:00",
+      "endTime": "2025-11-18T14:45:00",
+      "duration": "PT45M",
+      "summary": "\u5927\u898f\u6a21Drupal\u30b5\u30a4\u30c8\u306e\u6210\u529f\u4e8b\u4f8b\uff1a\u5168\u8c6a\u30aa\u30fc\u30d7\u30f3\u304c\u6bce\u520653\u4e07\u30ea\u30af\u30a8\u30b9\u30c8\u4ee5\u4e0a\u3092\u51e6\u7406\u3059\u308b\u4ed5\u7d44\u307f",
+      "location": "Hiten B",
+      "description": "jimmycann",
+      "link": "https://events.drupal.org/nara2025/session-0",
+      "track": "devops"
+    },
+    {
+      "startTime": "2025-11-18T14:45:00",
+      "endTime": "2025-11-18T15:00:00",
+      "duration": "PT15M",
+      "summary": "Afternoon Break",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/afternoon-break-0",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-18T15:00:00",
+      "endTime": "2025-11-18T15:45:00",
+      "duration": "PT45M",
+      "summary": "AI Agents in Drupal CMS - Create your own agent",
+      "location": "Hiten B",
+      "description": "https://www.drupal.org/u/vincenzo-gambino",
+      "link": "https://events.drupal.org/nara2025/session/ai-agents-drupal-cms-create-your-own-agent",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-18T15:00:00",
+      "endTime": "2025-11-18T15:45:00",
+      "duration": "PT45M",
+      "summary": "\u30c7\u30b8\u30bf\u30eb\u5e81\u304c\u53d6\u308a\u7d44\u3080Drupal\u3092\u6d3b\u7528\u3057\u305f\u5171\u901aCMS\u306e\u69cb\u7bc9",
+      "location": "Hiten A",
+      "description": "Akihiko Sakamoto, Hirokazu Awaji",
+      "link": "https://events.drupal.org/nara2025/session/teshitarutingkaqurizumudrupalwohuoyongshitagongtongcmsnogouzhu",
+      "track": "ux, accessibility, and design / ux\u3001\u30a2\u30af\u30bb\u30b7\u30d3\u30ea\u30c6\u30a3\u3001\u30c7\u30b6\u30a4\u30f3"
+    },
+    {
+      "startTime": "2025-11-18T16:15:00",
+      "endTime": "2025-11-18T17:00:00",
+      "duration": "PT45M",
+      "summary": "Not Just a Comeback: Building a Sustainable Drupal Community in India",
+      "location": "Hiten C/D",
+      "description": "nikitaaswani",
+      "link": "https://events.drupal.org/nara2025/session/not-just-comeback-building-sustainable-drupal-community-india",
+      "track": "community health / \u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30d8\u30eb\u30b9"
+    },
+    {
+      "startTime": "2025-11-18T16:15:00",
+      "endTime": "2025-11-18T16:35:00",
+      "duration": "PT20M",
+      "summary": "Smart Search, Safe Search: How Drupal + AI Work Together",
+      "location": "Hiten A",
+      "description": "sachikonitta",
+      "link": "https://events.drupal.org/nara2025/session/smart-search-safe-search-how-drupal-ai-work-together",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-18T16:15:00",
+      "endTime": "2025-11-18T17:00:00",
+      "duration": "PT45M",
+      "summary": "Taxonomy Term in Drupal Core \u2014 A Blessing or a Burden?",
+      "location": "Hiten B",
+      "description": "umekikazuya",
+      "link": "https://events.drupal.org/nara2025/session/taxonomy-term-drupal-core-blessing-or-burden",
+      "track": "site building / \u30b5\u30a4\u30c8\u69cb\u7bc9"
+    },
+    {
+      "startTime": "2025-11-18T16:40:00",
+      "endTime": "2025-11-18T17:00:00",
+      "duration": "PT20M",
+      "summary": "One kilobyte of JS is enough to make a decoupled FE block in Drupal. And no Babels required!",
+      "location": "Hiten A",
+      "description": "murz",
+      "link": "https://events.drupal.org/nara2025/session/one-kilobyte-js-enough-make-decoupled-fe-block-drupal-and-no-babels-required",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-18T17:00:00",
+      "endTime": "2025-11-18T17:15:00",
+      "duration": "PT15M",
+      "summary": "Closing Ceremony",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/closing-ceremony",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-19T09:00:00",
+      "endTime": "2025-11-19T17:20:00",
+      "duration": "PT8H20M",
+      "summary": "General Contribution Day 3",
+      "location": "Hiten C/D",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/general-contribution-day-3",
+      "track": ""
+    }
+  ]
+}
