@@ -1,6 +1,26 @@
 {
   "events": [
     {
+      "startTime": "2025-11-15T17:00:00",
+      "endTime": "2025-11-15T19:00:00",
+      "duration": "PT2H",
+      "summary": "Early Arrival Drinks (pay your own way) / \u65e9\u671f\u5230\u7740\u8005\u5411\u3051\u306e\u4ea4\u6d41\u4f1a",
+      "location": "Cafe Etranger NARAD",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/early-arrival-drinks-pay-your-own-way-zaoqidaozhezhexiangkenojiaoliuhui",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-16T12:30:00",
+      "endTime": "2025-11-16T15:40:00",
+      "duration": "PT3H10M",
+      "summary": "DrupalCon Nara Treasure Hunt",
+      "location": "Nara City Visitor's Centre",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/drupalcon-nara-treasure-hunt",
+      "track": ""
+    },
+    {
       "startTime": "2025-11-17T08:30:00",
       "endTime": "2025-11-17T09:30:00",
       "duration": "PT1H",
@@ -16,7 +36,7 @@
       "duration": "PT25M",
       "summary": "Welcome",
       "location": "Hiten C/D",
-      "description": "Gen Nakagawa",
+      "description": "Gen Nakagawa, Michael Richardson,Masami",
       "link": "https://events.drupal.org/nara2025/session/welcome",
       "track": ""
     },
@@ -91,6 +111,16 @@
       "track": "leadership and business / \u30ea\u30fc\u30c0\u30fc\u30b7\u30c3\u30d7\u3001\u30d3\u30b8\u30cd\u30b9"
     },
     {
+      "startTime": "2025-11-17T11:50:00",
+      "endTime": "2025-11-17T12:10:00",
+      "duration": "PT20M",
+      "summary": "Backwards and in High Heels: Early adopter insights on Drupal in Japanese academia",
+      "location": "Hiten B",
+      "description": "shinmaikeru",
+      "link": "https://events.drupal.org/nara2025/session/backwards-and-high-heels-early-adopter-insights-drupal-japanese-academia",
+      "track": "community health / \u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30d8\u30eb\u30b9"
+    },
+    {
       "startTime": "2025-11-17T12:10:00",
       "endTime": "2025-11-17T13:10:00",
       "duration": "PT1H",
@@ -99,6 +129,16 @@
       "description": "",
       "link": "https://events.drupal.org/nara2025/session/lunch",
       "track": ""
+    },
+    {
+      "startTime": "2025-11-17T13:10:00",
+      "endTime": "2025-11-17T13:55:00",
+      "duration": "PT45M",
+      "summary": "Kintsugi for the Web: Repairing, Rebuilding, and Reimagining with Drupal",
+      "location": "Hiten C/D",
+      "description": "dreambubbler",
+      "link": "https://events.drupal.org/nara2025/session/kintsugi-web-repairing-rebuilding-and-reimagining-drupal",
+      "track": "community health / \u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30d8\u30eb\u30b9"
     },
     {
       "startTime": "2025-11-17T13:10:00",
@@ -122,8 +162,8 @@
     },
     {
       "startTime": "2025-11-17T14:10:00",
-      "endTime": "2025-11-17T14:55:00",
-      "duration": "PT45M",
+      "endTime": "2025-11-17T14:30:00",
+      "duration": "PT20M",
       "summary": "Beyond Iframes: Modern Embedding in Drupal with Media and oEmbed",
       "location": "Hiten A",
       "description": "pcambra",
@@ -144,10 +184,20 @@
       "startTime": "2025-11-17T14:10:00",
       "endTime": "2025-11-17T14:40:00",
       "duration": "PT30M",
-      "summary": "Reserved Session Slot",
+      "summary": "\u30cd\u30b9\u30ec\u30b0\u30eb\u30fc\u30d7\u65e5\u672c\u62e0\u70b9\u306eDrupal\u5c0e\u5165\u306e\u4e8b\u4f8b\uff1a\u3000\u30b0\u30ed\u30fc\u30d0\u30eb\u6226\u7565\u3068\u73fe\u5834\u306e\u904b\u7528\u3092\u7e4b\u3044\u3067\u3044\u304f",
       "location": "Hiten C/D",
-      "description": "Masami",
-      "link": "https://events.drupal.org/nara2025/session/reserved-session-slot",
+      "description": "taishi, Kozo Takada",
+      "link": "https://events.drupal.org/nara2025/session/nesurekurufuribenjudiannodrupaldaorunoshili",
+      "track": "sponsored session"
+    },
+    {
+      "startTime": "2025-11-17T14:35:00",
+      "endTime": "2025-11-17T14:55:00",
+      "duration": "PT20M",
+      "summary": "Drupal Asia Steering Committee Panel",
+      "location": "Hiten A",
+      "description": "Michael Richardson",
+      "link": "https://events.drupal.org/nara2025/session/drupal-asia-steering-committee-panel",
       "track": ""
     },
     {
@@ -165,37 +215,37 @@
       "endTime": "2025-11-17T15:35:00",
       "duration": "PT20M",
       "summary": "Drupal\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u306e\u6210\u529f\u306f\u3001\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u30de\u30cd\u30fc\u30b8\u30e3\u30fc\u30fb\u30b9\u30af\u30e9\u30e0\u30de\u30b9\u30bf\u30fc\u30fbUX\u30c7\u30b6\u30a4\u30ca\u30fc\u306e\u529b\u3067\u52a0\u901f\u3059\u308b\u2015\u591a\u69d8\u306a\u8996\u70b9\u3092\u5dfb\u304d\u8fbc\u3080MeetupNara\u306e\u6311\u6226\u2015",
-      "location": "Hiten C/D",
+      "location": "Hiten B",
       "description": "Miki Yoshida, Misako Fukagawa",
       "link": "https://events.drupal.org/nara2025/session",
       "track": "community health / \u30b3\u30df\u30e5\u30cb\u30c6\u30a3\u30d8\u30eb\u30b9"
     },
     {
       "startTime": "2025-11-17T15:15:00",
-      "endTime": "2025-11-17T15:30:00",
-      "duration": "PT15M",
-      "summary": "Epic things you built with Drupal AI",
-      "location": "Hiten B",
-      "description": "schnitzel",
-      "link": "https://events.drupal.org/nara2025/session/epic-things-you-built-drupal-ai",
+      "endTime": "2025-11-17T15:45:00",
+      "duration": "PT30M",
+      "summary": "Session by Fastly",
+      "location": "Hiten C/D",
+      "description": "N A",
+      "link": "https://events.drupal.org/nara2025/session/session-fastly",
       "track": "sponsored session"
     },
     {
-      "startTime": "2025-11-17T15:30:00",
+      "startTime": "2025-11-17T15:15:00",
       "endTime": "2025-11-17T16:00:00",
-      "duration": "PT30M",
-      "summary": "Drupal Asia Steering Committee Panel",
-      "location": "Hiten B",
-      "description": "Michael Richardson",
-      "link": "https://events.drupal.org/nara2025/session/drupal-asia-steering-committee-panel",
-      "track": ""
+      "duration": "PT45M",
+      "summary": "Zero-downtime Drupal deployment with Kamal",
+      "location": "Hiten A",
+      "description": "hktang",
+      "link": "https://events.drupal.org/nara2025/session/zero-downtime-drupal-deployment-kamal",
+      "track": "devops"
     },
     {
       "startTime": "2025-11-17T15:40:00",
       "endTime": "2025-11-17T16:00:00",
       "duration": "PT20M",
       "summary": "\u6539\u3081\u3066\u632f\u308a\u8fd4\u308bDrupal\u306e\u30e2\u30b8\u30e5\u30fc\u30eb/\u30c6\u30fc\u30de\u306e\u30c7\u30d0\u30c3\u30b0\u65b9\u6cd5",
-      "location": "Hiten C/D",
+      "location": "Hiten B",
       "description": "otofu",
       "link": "https://events.drupal.org/nara2025/session/gaimetezhenrifanrudrupalnomoshiyurutemanotehatsukufangfa",
       "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
@@ -204,10 +254,10 @@
       "startTime": "2025-11-17T16:15:00",
       "endTime": "2025-11-17T17:00:00",
       "duration": "PT45M",
-      "summary": "Beyond CMS: Exploring Drupal\u2019s Potential as an AI LLM Builder",
+      "summary": "CMS\u306b\u7559\u307e\u3089\u306a\u3044 - AI\u3092\u64cd\u308bDrupal\u306e\u65b0\u305f\u306a\u53ef\u80fd\u6027",
       "location": "Hiten B",
       "description": "Masami,Akihito.Kimura@ntt.com",
-      "link": "https://events.drupal.org/nara2025/session/beyond-cms-exploring-drupals-potential-ai-llm-builder",
+      "link": "https://events.drupal.org/nara2025/session/cmsniliumaranai-aiwocaorudrupalnoxintanakenengxing",
       "track": "drupal showcase / drupal\u30b7\u30e7\u30fc\u30b1\u30fc\u30b9"
     },
     {
@@ -231,18 +281,8 @@
       "track": "ux, accessibility, and design / ux\u3001\u30a2\u30af\u30bb\u30b7\u30d3\u30ea\u30c6\u30a3\u3001\u30c7\u30b6\u30a4\u30f3"
     },
     {
-      "startTime": "2025-11-17T16:15:00",
-      "endTime": "2025-11-17T17:00:00",
-      "duration": "PT45M",
-      "summary": "How to become a Drupal Certified Partner agency(BoF)",
-      "location": "BoF Space",
-      "description": "Tim Doyle",
-      "link": "https://events.drupal.org/nara2025/session/how-become-drupal-certified-partner-agencybof",
-      "track": ""
-    },
-    {
-      "startTime": "2025-11-17T18:15:00",
-      "endTime": "2025-11-17T20:00:00",
+      "startTime": "2025-11-17T17:00:00",
+      "endTime": "2025-11-17T18:45:00",
       "duration": "PT1H45M",
       "summary": "Networking Drinks",
       "location": "Hiten C/D",
@@ -314,20 +354,20 @@
       "startTime": "2025-11-18T10:15:00",
       "endTime": "2025-11-18T11:00:00",
       "duration": "PT45M",
-      "summary": "Next steps for Experience Builder",
+      "summary": "Next steps for Drupal Canvas",
       "location": "Hiten C/D",
       "description": "lauriii",
-      "link": "https://events.drupal.org/nara2025/session/next-steps-experience-builder",
+      "link": "https://events.drupal.org/nara2025/session/next-steps-drupal-canvas",
       "track": "drupal cms"
     },
     {
       "startTime": "2025-11-18T11:15:00",
       "endTime": "2025-11-18T12:00:00",
       "duration": "PT45M",
-      "summary": "Don\u2019t Write Code, Start Prompting! AI Orchestration of Digital",
+      "summary": "Don\u2019t Write Code, Start Prompting! AI Orchestration of Digital Experiences",
       "location": "Hiten C/D",
       "description": "yas",
-      "link": "https://events.drupal.org/nara2025/session/dont-write-code-start-prompting-ai-orchestration-digital",
+      "link": "https://events.drupal.org/nara2025/session/dont-write-code-start-prompting-ai-orchestration-digital-experiences",
       "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
     },
     {
@@ -364,11 +404,21 @@
       "startTime": "2025-11-18T13:00:00",
       "endTime": "2025-11-18T13:45:00",
       "duration": "PT45M",
-      "summary": "How can we manage AI training data safely and efficiently?",
+      "summary": "Drupal in the Loop: \u30c1\u30fc\u30e0\u3067\u80b2\u3066\u308b\u5b66\u7fd2\u30c7\u30fc\u30bf",
       "location": "Hiten B",
       "description": "umekikazuya,sachikonitta",
-      "link": "https://events.drupal.org/nara2025/session/how-can-we-manage-ai-training-data-safely-and-efficiently",
+      "link": "https://events.drupal.org/nara2025/session/drupal-loop-chimuteyuteruxuexiteta",
       "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-18T13:00:00",
+      "endTime": "2025-11-18T13:15:00",
+      "duration": "PT15M",
+      "summary": "Epic things you built with Drupal AI",
+      "location": "Hiten A",
+      "description": "schnitzel",
+      "link": "https://events.drupal.org/nara2025/session/epic-things-you-built-drupal-ai",
+      "track": "sponsored session"
     },
     {
       "startTime": "2025-11-18T13:00:00",
@@ -381,8 +431,18 @@
       "track": "drupal cms"
     },
     {
-      "startTime": "2025-11-18T13:00:00",
-      "endTime": "2025-11-18T13:15:00",
+      "startTime": "2025-11-18T14:00:00",
+      "endTime": "2025-11-18T14:45:00",
+      "duration": "PT45M",
+      "summary": "Declarative Shadow DOM and the future of Drupal Theming",
+      "location": "Hiten C/D",
+      "description": "JohnAlbin",
+      "link": "https://events.drupal.org/nara2025/session/declarative-shadow-dom-and-future-drupal-theming",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-18T14:00:00",
+      "endTime": "2025-11-18T14:15:00",
       "duration": "PT15M",
       "summary": "The Future of Workflow Optimization with AI & Drupal Canvas",
       "location": "Hiten A",
@@ -394,21 +454,21 @@
       "startTime": "2025-11-18T14:00:00",
       "endTime": "2025-11-18T14:45:00",
       "duration": "PT45M",
-      "summary": "Declarative Shadow DOM and the future of Drupal Theming",
-      "location": "Hiten A",
-      "description": "JohnAlbin",
-      "link": "https://events.drupal.org/nara2025/session/declarative-shadow-dom-and-future-drupal-theming",
-      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
-    },
-    {
-      "startTime": "2025-11-18T14:00:00",
-      "endTime": "2025-11-18T14:45:00",
-      "duration": "PT45M",
       "summary": "\u5927\u898f\u6a21Drupal\u30b5\u30a4\u30c8\u306e\u6210\u529f\u4e8b\u4f8b\uff1a\u5168\u8c6a\u30aa\u30fc\u30d7\u30f3\u304c\u6bce\u520653\u4e07\u30ea\u30af\u30a8\u30b9\u30c8\u4ee5\u4e0a\u3092\u51e6\u7406\u3059\u308b\u4ed5\u7d44\u307f",
       "location": "Hiten B",
       "description": "jimmycann",
       "link": "https://events.drupal.org/nara2025/session-0",
       "track": "devops"
+    },
+    {
+      "startTime": "2025-11-18T14:25:00",
+      "endTime": "2025-11-18T14:45:00",
+      "duration": "PT20M",
+      "summary": "I\u2019m Not a Front-End Dev: Building Clean UI in Drupal with SDCs and Shoelace",
+      "location": "Hiten A",
+      "description": "yi_jiang",
+      "link": "https://events.drupal.org/nara2025/session/im-not-front-end-dev-building-clean-ui-drupal-sdcs-and-shoelace",
+      "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
     },
     {
       "startTime": "2025-11-18T14:45:00",
@@ -425,10 +485,20 @@
       "endTime": "2025-11-18T15:45:00",
       "duration": "PT45M",
       "summary": "AI Agents in Drupal CMS - Create your own agent",
-      "location": "Hiten B",
+      "location": "Hiten C/D",
       "description": "https://www.drupal.org/u/vincenzo-gambino",
       "link": "https://events.drupal.org/nara2025/session/ai-agents-drupal-cms-create-your-own-agent",
       "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
+    },
+    {
+      "startTime": "2025-11-18T15:00:00",
+      "endTime": "2025-11-18T15:45:00",
+      "duration": "PT45M",
+      "summary": "How to become a Drupal Certified Partner agency",
+      "location": "Hiten B",
+      "description": "Tim Doyle",
+      "link": "https://events.drupal.org/nara2025/session/how-become-drupal-certified-partner-agency",
+      "track": ""
     },
     {
       "startTime": "2025-11-18T15:00:00",
@@ -439,6 +509,16 @@
       "description": "Akihiko Sakamoto, Hirokazu Awaji",
       "link": "https://events.drupal.org/nara2025/session/teshitarutingkaqurizumudrupalwohuoyongshitagongtongcmsnogouzhu",
       "track": "ux, accessibility, and design / ux\u3001\u30a2\u30af\u30bb\u30b7\u30d3\u30ea\u30c6\u30a3\u3001\u30c7\u30b6\u30a4\u30f3"
+    },
+    {
+      "startTime": "2025-11-18T16:15:00",
+      "endTime": "2025-11-18T17:00:00",
+      "duration": "PT45M",
+      "summary": "\"\u5f53\u305f\u308a\u524d\"\u3092\u7591\u3044\u307e\u3057\u3087 ~ \u30d5\u30ec\u30fc\u30e0\u30ef\u30fc\u30af\u304b\u3089\u30c9\u30e1\u30a4\u30f3\u3092\u5b88\u308bDrupal\u30a2\u30fc\u30ad\u30c6\u30af\u30c1\u30e3 ~",
+      "location": "Hiten B",
+      "description": "umekikazuya",
+      "link": "https://events.drupal.org/nara2025/session/dangtariqianwoyiimashiyo-furemuwakukaratomeinwoshourudrupalakitekuchiya",
+      "track": "site building / \u30b5\u30a4\u30c8\u69cb\u7bc9"
     },
     {
       "startTime": "2025-11-18T16:15:00",
@@ -461,16 +541,6 @@
       "track": "development and coding / \u958b\u767a\u3068\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0"
     },
     {
-      "startTime": "2025-11-18T16:15:00",
-      "endTime": "2025-11-18T17:00:00",
-      "duration": "PT45M",
-      "summary": "Taxonomy Term in Drupal Core \u2014 A Blessing or a Burden?",
-      "location": "Hiten B",
-      "description": "umekikazuya",
-      "link": "https://events.drupal.org/nara2025/session/taxonomy-term-drupal-core-blessing-or-burden",
-      "track": "site building / \u30b5\u30a4\u30c8\u69cb\u7bc9"
-    },
-    {
       "startTime": "2025-11-18T16:40:00",
       "endTime": "2025-11-18T17:00:00",
       "duration": "PT20M",
@@ -488,6 +558,16 @@
       "location": "Hiten C/D",
       "description": "",
       "link": "https://events.drupal.org/nara2025/session/closing-ceremony",
+      "track": ""
+    },
+    {
+      "startTime": "2025-11-18T18:00:00",
+      "endTime": "2025-11-18T20:00:00",
+      "duration": "PT2H",
+      "summary": "Thank You After Party / \u30b5\u30f3\u30ad\u30e5\u30fc\u30d1\u30fc\u30c6\u30a3\u30fc",
+      "location": "Cafe Etranger NARAD",
+      "description": "",
+      "link": "https://events.drupal.org/nara2025/session/thank-you-after-party-sankiyuhatei",
       "track": ""
     },
     {
