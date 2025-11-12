@@ -24,7 +24,3 @@ Thumbs.db
 source
 requirements.txt
 server.py
-
-# Drupal module and related plan
-schedule_builder/
-DRUPAL_MODULE_PLAN.md

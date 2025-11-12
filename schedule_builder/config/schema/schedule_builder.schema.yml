@@ -1,0 +1,49 @@
+schedule_builder.block.settings:
+  type: block_config
+  label: 'Schedule Builder block settings'
+  mapping:
+    event_container_selector:
+      type: string
+      label: 'Event container selector'
+    event_title_selector:
+      type: string
+      label: 'Event title selector'
+    event_start_time_selector:
+      type: string
+      label: 'Event start time selector'
+    event_end_time_selector:
+      type: string
+      label: 'Event end time selector'
+    event_date_selector:
+      type: string
+      label: 'Event date selector'
+      nullable: true
+    event_location_selector:
+      type: string
+      label: 'Event location selector'
+      nullable: true
+    event_description_selector:
+      type: string
+      label: 'Event description selector'
+      nullable: true
+    event_link_selector:
+      type: string
+      label: 'Event link selector'
+      nullable: true
+    event_track_selector:
+      type: string
+      label: 'Event track selector'
+      nullable: true
+    timezone:
+      type: string
+      label: 'Timezone'
+    localStorage_key:
+      type: string
+      label: 'LocalStorage key'
+    ics_filename:
+      type: string
+      label: 'ICS filename'
+    checkbox_position:
+      type: string
+      label: 'Checkbox position'
+

@@ -1,0 +1,58 @@
+/**
+ * @file
+ * Schedule Builder basic styles.
+ */
+
+/* Checkbox styling */
+.schedule-builder-checkbox {
+  margin-right: 0.5em;
+  cursor: pointer;
+  width: 1.2em;
+  height: 1.2em;
+  flex-shrink: 0;
+}
+
+.schedule-builder-checkbox:focus {
+  outline: 2px solid #006aa9;
+  outline-offset: 2px;
+}
+
+/* Download button container */
+.schedule-builder-download-container {
+  margin: 1em 0;
+  padding: 1em;
+  text-align: center;
+}
+
+/* Download button */
+.schedule-builder-download-button {
+  padding: 0.75em 1.5em;
+  background-color: #006aa9;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.schedule-builder-download-button:hover:not(:disabled) {
+  background-color: #005587;
+}
+
+.schedule-builder-download-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.schedule-builder-download-button:focus {
+  outline: 2px solid #006aa9;
+  outline-offset: 2px;
+}
+
+/* Container */
+.schedule-builder-container {
+  /* Minimal container styling - let theme handle layout */
+}
+
