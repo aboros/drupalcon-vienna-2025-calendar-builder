@@ -153,19 +153,18 @@
           }
         }
 
-        // Generate unique ID.
-        if (event.summary && event.startTime) {
+        // Generate unique ID and add event only if all required iCal fields are present.
+        // Required fields: SUMMARY (title), DTSTART (startTime), DTEND (endTime)
+        if (event.summary && event.startTime && event.endTime) {
           event.id = generateEventId(event, index);
           
-          // Calculate duration if we have start and end times.
-          if (event.startTime && event.endTime) {
-            const start = new Date(event.startTime);
-            const end = new Date(event.endTime);
-            const durationMs = end - start;
-            const hours = Math.floor(durationMs / (1000 * 60 * 60));
-            const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
-            event.duration = 'PT' + (hours > 0 ? hours + 'H' : '') + (minutes > 0 ? minutes + 'M' : '');
-          }
+          // Calculate duration from start and end times.
+          const start = new Date(event.startTime);
+          const end = new Date(event.endTime);
+          const durationMs = end - start;
+          const hours = Math.floor(durationMs / (1000 * 60 * 60));
+          const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+          event.duration = 'PT' + (hours > 0 ? hours + 'H' : '') + (minutes > 0 ? minutes + 'M' : '');
 
           events.push(event);
         }
@@ -237,6 +236,80 @@
   }
 
   /**
+   * Extract event data from a single container.
+   * Used to generate event ID for matching containers to events.
+   */
+  function extractEventFromContainer(container, config, containerIndex) {
+    const event = {
+      id: null,
+      summary: null,
+      startTime: null,
+      endTime: null,
+      location: null,
+      description: null,
+      link: null
+    };
+
+    // Extract title.
+    if (config.selectors.title) {
+      const titleEl = container.querySelector(config.selectors.title);
+      if (titleEl) {
+        event.summary = titleEl.textContent.trim();
+      }
+    }
+
+    // Extract start time.
+    if (config.selectors.startTime) {
+      const startEl = container.querySelector(config.selectors.startTime);
+      if (startEl) {
+        const startValue = startEl.dataset.startTime || startEl.getAttribute('data-start-time') || startEl.textContent.trim();
+        event.startTime = parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+      }
+    }
+
+    // Extract end time.
+    if (config.selectors.endTime) {
+      const endEl = container.querySelector(config.selectors.endTime);
+      if (endEl) {
+        const endValue = endEl.dataset.endTime || endEl.getAttribute('data-end-time') || endEl.textContent.trim();
+        event.endTime = parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+      }
+    }
+
+    // Extract location.
+    if (config.selectors.location) {
+      const locationEl = container.querySelector(config.selectors.location);
+      if (locationEl) {
+        event.location = locationEl.dataset.location || locationEl.getAttribute('data-location') || locationEl.textContent.trim();
+      }
+    }
+
+    // Extract description.
+    if (config.selectors.description) {
+      const descEl = container.querySelector(config.selectors.description);
+      if (descEl) {
+        event.description = descEl.textContent.trim();
+      }
+    }
+
+    // Extract link.
+    if (config.selectors.link) {
+      const linkEl = container.querySelector(config.selectors.link);
+      if (linkEl) {
+        event.link = linkEl.href || linkEl.getAttribute('href') || null;
+      }
+    }
+
+    // Generate unique ID if we have all required iCal fields.
+    // Required fields: SUMMARY (title), DTSTART (startTime), DTEND (endTime)
+    if (event.summary && event.startTime && event.endTime) {
+      event.id = generateEventId(event, containerIndex);
+    }
+
+    return event;
+  }
+
+  /**
    * Attach checkboxes to event containers.
    */
   function attachCheckboxes(events, config, selectedEvents, context) {
@@ -253,14 +326,31 @@
     
     const eventContainers = searchContext.querySelectorAll(containerSelector);
 
-    eventContainers.forEach(function (container, index) {
+    // Create a map of event ID to event for efficient lookup.
+    const eventsById = {};
+    events.forEach(function (event) {
+      if (event.id) {
+        eventsById[event.id] = event;
+      }
+    });
+
+    eventContainers.forEach(function (container, containerIndex) {
       // Skip if checkbox already exists.
       if (container.querySelector('.schedule-builder-checkbox')) {
         return;
       }
 
-      const event = events[index];
-      if (!event || !event.id) {
+      // Extract event data from container to generate its ID.
+      const containerEvent = extractEventFromContainer(container, config, containerIndex);
+      
+      // Only attach checkbox if container has required fields and matches an extracted event.
+      if (!containerEvent.id) {
+        return;
+      }
+
+      // Look up the event by ID instead of array index.
+      const event = eventsById[containerEvent.id];
+      if (!event) {
         return;
       }
 
@@ -463,9 +553,28 @@
     const dtstamp = getCurrentTimestampICS();
     const timezone = config.timezone || 'UTC';
 
-    const icsEvents = events.map(function (event) {
+    // Filter out events missing required iCal fields (SUMMARY, DTSTART, DTEND).
+    // This is a safety check even though events should already be validated during extraction.
+    const validEvents = events.filter(function (event) {
+      return event.summary && event.startTime && event.endTime;
+    });
+
+    if (validEvents.length === 0) {
+      console.warn('Schedule Builder: No valid events with required fields (title, startTime, endTime) to generate ICS.');
+      return '';
+    }
+
+    const icsEvents = validEvents.map(function (event) {
       const start = formatDateForICS(event.startTime);
       const end = formatDateForICS(event.endTime);
+      
+      // Additional safety check: ensure formatted dates are not empty.
+      // This should never happen if events are properly validated, but provides extra protection.
+      if (!start || !end) {
+        console.warn('Schedule Builder: Skipping event with invalid date format:', event.id, event.summary);
+        return null;
+      }
+      
       const uid = event.id + '@schedule-builder';
 
       // Escape special characters.
@@ -487,6 +596,8 @@
       ];
 
       return eventLines.join('\r\n');
+    }).filter(function (icsEvent) {
+      return icsEvent !== null;
     }).join('\r\n');
 
     // Generate VTIMEZONE definition.
