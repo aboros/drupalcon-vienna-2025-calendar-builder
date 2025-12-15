@@ -30,10 +30,6 @@ schedule_builder.block.settings:
       type: string
       label: 'Event link selector'
       nullable: true
-    event_track_selector:
-      type: string
-      label: 'Event track selector'
-      nullable: true
     timezone:
       type: string
       label: 'Timezone'

@@ -2,6 +2,8 @@
 
 A Drupal module that attaches JavaScript functionality to extract events from page HTML, allow users to select events via checkboxes, and download selected events as ICS calendar files.
 
+The module focuses on standard iCal (RFC 5545) compliant fields: event title (SUMMARY), start and end dates/times (DTSTART/DTEND), description (DESCRIPTION), location (LOCATION), and link (URL).
+
 ## Requirements
 
 - Drupal 10.x or 11.x
@@ -33,7 +35,6 @@ A Drupal module that attaches JavaScript functionality to extract events from pa
      - **Event Location Selector** (optional): e.g., `.location`, `[data-location]`
      - **Event Description Selector** (optional): e.g., `.description`
      - **Event Link Selector** (optional): e.g., `a.session-link`
-     - **Event Track Selector** (optional): e.g., `.track`, `[data-track]`
    - Set **Timezone** for ICS file generation
    - Configure **LocalStorage Key** (unique per block instance)
    - Set **ICS Filename** for downloaded files
@@ -51,7 +52,6 @@ A Drupal module that attaches JavaScript functionality to extract events from pa
   <div class="session-location">Room A</div>
   <div class="session-description">Speaker Name</div>
   <a href="/session/123" class="session-link">View Details</a>
-  <span class="session-track">Track Name</span>
 </div>
 ```
 
@@ -63,7 +63,6 @@ A Drupal module that attaches JavaScript functionality to extract events from pa
 - Event Location Selector: `.session-location`
 - Event Description Selector: `.session-description`
 - Event Link Selector: `.session-link`
-- Event Track Selector: `.session-track`
 
 ### Date/Time Formats
 
@@ -98,20 +97,29 @@ Downloaded files can be imported into:
 ### Required Settings
 
 - **Event Container Selector**: CSS selector for each event item
-- **Event Title Selector**: Selector for event title (relative to container)
-- **Event Start Time Selector**: Selector for start time
-- **Event End Time Selector**: Selector for end time
+- **Event Title Selector**: Selector for event title/summary (maps to iCal SUMMARY)
+- **Event Start Time Selector**: Selector for start time (maps to iCal DTSTART)
+- **Event End Time Selector**: Selector for end time (maps to iCal DTEND)
 - **Timezone**: Timezone for ICS generation
 - **LocalStorage Key**: Unique key for storing selections
 - **ICS Filename**: Filename for downloaded files
 
+### iCal Standard Fields
+
+The module supports the following standard iCal (RFC 5545) fields:
+- **SUMMARY** (required): Event title/summary
+- **DTSTART** (required): Event start date/time
+- **DTEND** (required): Event end date/time
+- **DESCRIPTION** (optional): Event description
+- **LOCATION** (optional): Event location/venue
+- **URL** (optional): Event link/URL
+
 ### Optional Settings
 
 - **Event Date Selector**: If date is separate from time
-- **Event Location Selector**: For location/venue
-- **Event Description Selector**: For description/speaker info
-- **Event Link Selector**: For event URL
-- **Event Track Selector**: For track/category
+- **Event Location Selector**: For location/venue (maps to iCal LOCATION)
+- **Event Description Selector**: For description/speaker info (maps to iCal DESCRIPTION)
+- **Event Link Selector**: For event URL (maps to iCal URL)
 - **Checkbox Position**: Where to place checkboxes
 
 ## Multiple Instances

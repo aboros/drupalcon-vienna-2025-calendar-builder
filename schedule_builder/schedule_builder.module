@@ -17,7 +17,7 @@ function schedule_builder_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Schedule Builder module allows sitebuilders to place a block on pages containing event listings. The module attaches JavaScript that extracts event data from the page HTML, allows users to select events via checkboxes, and download selected events as ICS calendar files.') . '</p>';
       $output .= '<h3>' . t('Usage') . '</h3>';
-      $output .= '<p>' . t('Place the Schedule Builder block on a page containing event listings. Configure the block settings to map CSS selectors to event properties (title, time, location, etc.). The module will automatically attach checkboxes to event items and enable ICS download functionality.') . '</p>';
+      $output .= '<p>' . t('Place the Schedule Builder block on a page containing event listings. Configure the block settings to map CSS selectors to standard iCal event properties (title/summary, start/end times, description, location, and link). The module will automatically attach checkboxes to event items and enable ICS download functionality.') . '</p>';
       return $output;
 
     default:

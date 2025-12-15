@@ -59,10 +59,11 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    $system_config = $this->configFactory->get('system.date');
-    $default_timezone = $system_config->get('timezone.default') ?: date_default_timezone_get();
-
+    // Note: Cannot access injected services here as this is called during construction.
+    // Use PHP's default timezone as fallback; actual site timezone will be available
+    // when the block form is displayed.
     return [
+      'search_context_selector' => '',
       'event_container_selector' => '',
       'event_title_selector' => 'h2, h3, .title, .summary',
       'event_start_time_selector' => '.start-time, [data-start-time]',
@@ -71,8 +72,7 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       'event_location_selector' => '.location, .venue, [data-location]',
       'event_description_selector' => '.description, .speaker',
       'event_link_selector' => 'a.session-link, a[href]',
-      'event_track_selector' => '.track, .category, [data-track]',
-      'timezone' => $default_timezone,
+      'timezone' => date_default_timezone_get(),
       'localStorage_key' => '',
       'ics_filename' => 'schedule-selected-events',
       'checkbox_position' => 'before-title',
@@ -90,6 +90,24 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
     foreach (timezone_identifiers_list() as $tz) {
       $timezones[$tz] = $tz;
     }
+
+    // If timezone is not yet set or is using PHP default, use site's default timezone.
+    $default_timezone = $config['timezone'];
+    if (empty($default_timezone) || $default_timezone === date_default_timezone_get()) {
+      $system_config = $this->configFactory->get('system.date');
+      $site_timezone = $system_config->get('timezone.default');
+      if (!empty($site_timezone)) {
+        $default_timezone = $site_timezone;
+      }
+    }
+
+    $form['search_context_selector'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Search Context Selector'),
+      '#description' => $this->t('Optional: CSS selector for the container to search within (e.g., ".view-content", "#main-content"). Leave empty to search the entire document.'),
+      '#default_value' => $config['search_context_selector'],
+      '#required' => FALSE,
+    ];
 
     $form['event_container_selector'] = [
       '#type' => 'textfield',
@@ -155,20 +173,12 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       '#required' => FALSE,
     ];
 
-    $form['event_track_selector'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Event Track/Category Selector'),
-      '#description' => $this->t('Optional: Selector for track/category (e.g., ".track", "[data-track]").'),
-      '#default_value' => $config['event_track_selector'],
-      '#required' => FALSE,
-    ];
-
     $form['timezone'] = [
       '#type' => 'select',
       '#title' => $this->t('Timezone'),
       '#description' => $this->t('Timezone for ICS file generation. Defaults to site timezone.'),
       '#options' => $timezones,
-      '#default_value' => $config['timezone'],
+      '#default_value' => $default_timezone,
       '#required' => TRUE,
     ];
 
@@ -244,6 +254,7 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
+    $this->setConfigurationValue('search_context_selector', $form_state->getValue('search_context_selector'));
     $this->setConfigurationValue('event_container_selector', $form_state->getValue('event_container_selector'));
     $this->setConfigurationValue('event_title_selector', $form_state->getValue('event_title_selector'));
     $this->setConfigurationValue('event_start_time_selector', $form_state->getValue('event_start_time_selector'));
@@ -252,7 +263,6 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
     $this->setConfigurationValue('event_location_selector', $form_state->getValue('event_location_selector'));
     $this->setConfigurationValue('event_description_selector', $form_state->getValue('event_description_selector'));
     $this->setConfigurationValue('event_link_selector', $form_state->getValue('event_link_selector'));
-    $this->setConfigurationValue('event_track_selector', $form_state->getValue('event_track_selector'));
     $this->setConfigurationValue('timezone', $form_state->getValue('timezone'));
     $this->setConfigurationValue('localStorage_key', $form_state->getValue('localStorage_key'));
     $this->setConfigurationValue('ics_filename', $form_state->getValue('ics_filename'));
@@ -280,6 +290,7 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
     $settings = [
       'blockId' => $block_id,
       'selectors' => [
+        'searchContext' => $config['search_context_selector'] ?: null,
         'eventContainer' => $config['event_container_selector'],
         'title' => $config['event_title_selector'],
         'startTime' => $config['event_start_time_selector'],
@@ -288,7 +299,6 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
         'location' => $config['event_location_selector'] ?: null,
         'description' => $config['event_description_selector'] ?: null,
         'link' => $config['event_link_selector'] ?: null,
-        'track' => $config['event_track_selector'] ?: null,
       ],
       'timezone' => $config['timezone'],
       'localStorageKey' => $config['localStorage_key'],

@@ -75,7 +75,19 @@
    */
   function extractEvents(config, context) {
     const containerSelector = config.selectors.eventContainer;
-    const eventContainers = context.querySelectorAll(containerSelector);
+    
+    // Determine search context: use configured context selector, fall back to document.
+    let searchContext = document;
+    if (config.selectors.searchContext) {
+      const customContext = document.querySelector(config.selectors.searchContext);
+      if (customContext) {
+        searchContext = customContext;
+      } else {
+        console.warn('Schedule Builder: Search context not found with selector: ' + config.selectors.searchContext + ', falling back to document');
+      }
+    }
+    
+    const eventContainers = searchContext.querySelectorAll(containerSelector);
     const events = [];
 
     eventContainers.forEach(function (container, index) {
@@ -88,7 +100,6 @@
           location: null,
           description: null,
           link: null,
-          track: null,
           duration: null
         };
 
@@ -139,14 +150,6 @@
           const linkEl = container.querySelector(config.selectors.link);
           if (linkEl) {
             event.link = linkEl.href || linkEl.getAttribute('href') || null;
-          }
-        }
-
-        // Extract track.
-        if (config.selectors.track) {
-          const trackEl = container.querySelector(config.selectors.track);
-          if (trackEl) {
-            event.track = trackEl.dataset.track || trackEl.getAttribute('data-track') || trackEl.textContent.trim();
           }
         }
 
@@ -228,7 +231,6 @@
       event.startTime ? event.startTime.split('T')[0] : '',
       event.startTime ? event.startTime.split('T')[1] : '',
       event.summary ? event.summary.toLowerCase().replace(/[^a-z0-9]/g, '-') : '',
-      event.location ? event.location.toLowerCase().replace(/[^a-z0-9]/g, '-') : '',
       index
     ];
     return parts.filter(p => p).join('-').replace(/-+/g, '-').replace(/^-|-$/g, '');
@@ -239,7 +241,17 @@
    */
   function attachCheckboxes(events, config, selectedEvents, context) {
     const containerSelector = config.selectors.eventContainer;
-    const eventContainers = context.querySelectorAll(containerSelector);
+    
+    // Determine search context: use configured context selector, fall back to document.
+    let searchContext = document;
+    if (config.selectors.searchContext) {
+      const customContext = document.querySelector(config.selectors.searchContext);
+      if (customContext) {
+        searchContext = customContext;
+      }
+    }
+    
+    const eventContainers = searchContext.querySelectorAll(containerSelector);
 
     eventContainers.forEach(function (container, index) {
       // Skip if checkbox already exists.
