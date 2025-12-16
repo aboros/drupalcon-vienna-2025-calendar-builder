@@ -75,7 +75,7 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       'timezone' => date_default_timezone_get(),
       'localStorage_key' => '',
       'ics_filename' => 'schedule-selected-events',
-      'checkbox_position' => 'before-title',
+      'checkbox_position' => 'beginning',
     ];
   }
 
@@ -206,10 +206,8 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
     $form['checkbox_position'] = [
       '#type' => 'select',
       '#title' => $this->t('Checkbox Position'),
-      '#description' => $this->t('Where to place the checkbox relative to event container.'),
+      '#description' => $this->t('Where to place the checkbox in the event container.'),
       '#options' => [
-        'before-title' => $this->t('Before title'),
-        'after-title' => $this->t('After title'),
         'beginning' => $this->t('At the beginning of container'),
         'end' => $this->t('At the end of container'),
       ],

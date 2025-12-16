@@ -43,23 +43,23 @@
    */
   function initializeScheduleBuilder(blockId, config, context) {
     // Extract events from DOM.
-    const events = extractEvents(config, context);
+    const extractionResult = extractEvents(config, context);
+    const events = extractionResult.events;
+    
+    if (extractionResult.containersFound === 0) {
+      console.warn('Schedule Builder: No event containers found with selector: ' + config.selectors.eventContainer);
+      return;
+    }
     
     if (events.length === 0) {
-      console.warn('Schedule Builder: No events found with selector: ' + config.selectors.eventContainer);
+      console.warn('Schedule Builder: Found ' + extractionResult.containersFound + ' event container(s) with selector "' + config.selectors.eventContainer + '", but could not extract valid events (missing required fields: summary, startTime, or endTime)');
       return;
     }
 
     // Load saved selections from localStorage.
     const selectedEvents = loadSelections(config.localStorageKey);
 
-    // Attach checkboxes to event containers.
-    attachCheckboxes(events, config, selectedEvents, context);
-
-    // Create download button if it doesn't exist.
-    createDownloadButton(blockId, config, events, selectedEvents);
-
-    // Store events and config for later use.
+    // Store events and config for later use BEFORE creating UI elements.
     if (!window.scheduleBuilderInstances) {
       window.scheduleBuilderInstances = {};
     }
@@ -68,10 +68,17 @@
       config: config,
       selectedEvents: selectedEvents
     };
+
+    // Attach checkboxes to event containers.
+    attachCheckboxes(events, config, selectedEvents, context);
+
+    // Create download button if it doesn't exist.
+    createDownloadButton(blockId, config, events, selectedEvents);
   }
 
   /**
    * Extract events from DOM using configured selectors.
+   * Returns an object with events array and containersFound count.
    */
   function extractEvents(config, context) {
     const containerSelector = config.selectors.eventContainer;
@@ -88,6 +95,7 @@
     }
     
     const eventContainers = searchContext.querySelectorAll(containerSelector);
+    const containersFound = eventContainers.length;
     const events = [];
 
     eventContainers.forEach(function (container, index) {
@@ -97,6 +105,8 @@
           summary: null,
           startTime: null,
           endTime: null,
+          startTimeTimezone: null,
+          endTimeTimezone: null,
           location: null,
           description: null,
           link: null,
@@ -115,8 +125,11 @@
         if (config.selectors.startTime) {
           const startEl = container.querySelector(config.selectors.startTime);
           if (startEl) {
-            const startValue = startEl.dataset.startTime || startEl.getAttribute('data-start-time') || startEl.textContent.trim();
-            event.startTime = parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+            // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
+            const startValue = startEl.getAttribute('datetime') || startEl.dataset.startTime || startEl.getAttribute('data-start-time') || startEl.textContent.trim();
+            const startParsed = parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+            event.startTime = startParsed.dateTime;
+            event.startTimeTimezone = startParsed.timezone;
           }
         }
 
@@ -124,8 +137,11 @@
         if (config.selectors.endTime) {
           const endEl = container.querySelector(config.selectors.endTime);
           if (endEl) {
-            const endValue = endEl.dataset.endTime || endEl.getAttribute('data-end-time') || endEl.textContent.trim();
-            event.endTime = parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+            // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
+            const endValue = endEl.getAttribute('datetime') || endEl.dataset.endTime || endEl.getAttribute('data-end-time') || endEl.textContent.trim();
+            const endParsed = parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+            event.endTime = endParsed.dateTime;
+            event.endTimeTimezone = endParsed.timezone;
           }
         }
 
@@ -173,23 +189,22 @@
       }
     });
 
-    return events;
+    return {
+      events: events,
+      containersFound: containersFound
+    };
   }
 
   /**
-   * Parse date/time string into ISO 8601 format.
+   * Parse date/time string into ISO 8601 format, preserving timezone information.
+   * Returns an object with dateTime (ISO string in UTC) and timezone info.
    */
   function parseDateTime(timeValue, dateElement) {
     if (!timeValue) {
-      return null;
+      return { dateTime: null, timezone: null };
     }
 
-    // If it's already in ISO 8601 format, use it directly.
-    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(timeValue)) {
-      return timeValue;
-    }
-
-    // Try to parse as Date object.
+    // Try to parse as Date object (handles ISO 8601 with timezone automatically).
     let dateObj = new Date(timeValue);
     
     // If date element provided, try to combine date + time.
@@ -202,24 +217,51 @@
 
     // If still invalid, try common formats.
     if (isNaN(dateObj.getTime())) {
-      // Try format: "Oct 14, 2025 9:30 AM"
       dateObj = new Date(timeValue);
     }
 
     if (isNaN(dateObj.getTime())) {
       console.warn('Schedule Builder: Could not parse date/time:', timeValue);
-      return null;
+      return { dateTime: null, timezone: null };
     }
 
-    // Convert to ISO 8601 format (local time, no timezone).
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    const hours = String(dateObj.getHours()).padStart(2, '0');
-    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+    // Check if input was in ISO 8601 format with timezone indicator.
+    // Extract timezone info from original string for proper ICS generation.
+    let timezone = null;
+    let hadTimezone = false;
+    const isoWithTimezoneMatch = timeValue.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})([Z+\-]\d{2}:?\d{2})?$/);
+    if (isoWithTimezoneMatch) {
+      const timezonePart = isoWithTimezoneMatch[2];
+      if (timezonePart) {
+        hadTimezone = true;
+        if (timezonePart === 'Z') {
+          timezone = 'UTC';
+        } else {
+          // For offset-based timezones (e.g., "+01:00"), the Date object converts them
+          // to UTC correctly. We mark as UTC so ICS uses UTC format (DTSTART:...Z),
+          // which preserves the correct moment in time regardless of the original offset.
+          timezone = 'UTC';
+        }
+      }
+    }
 
-    return year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds;
+    // Convert to ISO 8601 format in UTC (for consistent storage).
+    // The Date object has already converted to UTC if timezone was present.
+    const year = dateObj.getUTCFullYear();
+    const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getUTCDate()).padStart(2, '0');
+    const hours = String(dateObj.getUTCHours()).padStart(2, '0');
+    const minutes = String(dateObj.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(dateObj.getUTCSeconds()).padStart(2, '0');
+
+    // Return UTC time with 'Z' indicator if the original had a timezone.
+    // This ensures we use UTC format in ICS, preserving the moment in time.
+    const dateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds + (hadTimezone ? 'Z' : '');
+
+    return {
+      dateTime: dateTime,
+      timezone: timezone
+    };
   }
 
   /**
@@ -245,6 +287,8 @@
       summary: null,
       startTime: null,
       endTime: null,
+      startTimeTimezone: null,
+      endTimeTimezone: null,
       location: null,
       description: null,
       link: null
@@ -262,8 +306,11 @@
     if (config.selectors.startTime) {
       const startEl = container.querySelector(config.selectors.startTime);
       if (startEl) {
-        const startValue = startEl.dataset.startTime || startEl.getAttribute('data-start-time') || startEl.textContent.trim();
-        event.startTime = parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+        // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
+        const startValue = startEl.getAttribute('datetime') || startEl.dataset.startTime || startEl.getAttribute('data-start-time') || startEl.textContent.trim();
+        const startParsed = parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+        event.startTime = startParsed.dateTime;
+        event.startTimeTimezone = startParsed.timezone;
       }
     }
 
@@ -271,8 +318,11 @@
     if (config.selectors.endTime) {
       const endEl = container.querySelector(config.selectors.endTime);
       if (endEl) {
-        const endValue = endEl.dataset.endTime || endEl.getAttribute('data-end-time') || endEl.textContent.trim();
-        event.endTime = parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+        // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
+        const endValue = endEl.getAttribute('datetime') || endEl.dataset.endTime || endEl.getAttribute('data-end-time') || endEl.textContent.trim();
+        const endParsed = parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+        event.endTime = endParsed.dateTime;
+        event.endTimeTimezone = endParsed.timezone;
       }
     }
 
@@ -372,45 +422,24 @@
       });
 
       // Insert checkbox at configured position.
-      insertCheckbox(checkbox, container, config.checkboxPosition, config.selectors.title);
+      insertCheckbox(checkbox, container, config.checkboxPosition);
     });
   }
 
   /**
-   * Insert checkbox at specified position.
+   * Insert checkbox as a direct child of the event container.
+   * Position options: 'beginning' (first child) or 'end' (last child).
    */
-  function insertCheckbox(checkbox, container, position, titleSelector) {
-    switch (position) {
-      case 'before-title':
-        const titleEl = container.querySelector(titleSelector);
-        if (titleEl) {
-          container.insertBefore(checkbox, titleEl);
-        } else {
-          container.insertBefore(checkbox, container.firstChild);
-        }
-        break;
-
-      case 'after-title':
-        const titleEl2 = container.querySelector(titleSelector);
-        if (titleEl2 && titleEl2.nextSibling) {
-          container.insertBefore(checkbox, titleEl2.nextSibling);
-        } else if (titleEl2) {
-          container.appendChild(checkbox);
-        } else {
-          container.insertBefore(checkbox, container.firstChild);
-        }
-        break;
-
-      case 'beginning':
+  function insertCheckbox(checkbox, container, position) {
+    if (position === 'end') {
+      container.appendChild(checkbox);
+    } else {
+      // Default to beginning.
+      if (container.firstChild) {
         container.insertBefore(checkbox, container.firstChild);
-        break;
-
-      case 'end':
+      } else {
         container.appendChild(checkbox);
-        break;
-
-      default:
-        container.insertBefore(checkbox, container.firstChild);
+      }
     }
   }
 
@@ -565,12 +594,17 @@
     }
 
     const icsEvents = validEvents.map(function (event) {
-      const start = formatDateForICS(event.startTime);
-      const end = formatDateForICS(event.endTime);
+      // Use event's timezone if available, otherwise fall back to configured timezone.
+      const eventTimezone = event.startTimeTimezone || timezone;
+      const eventEndTimezone = event.endTimeTimezone || timezone;
+      
+      // Format dates for ICS, preserving UTC format if applicable.
+      const startFormatted = formatDateForICS(event.startTime, eventTimezone);
+      const endFormatted = formatDateForICS(event.endTime, eventEndTimezone);
       
       // Additional safety check: ensure formatted dates are not empty.
       // This should never happen if events are properly validated, but provides extra protection.
-      if (!start || !end) {
+      if (!startFormatted.formatted || !endFormatted.formatted) {
         console.warn('Schedule Builder: Skipping event with invalid date format:', event.id, event.summary);
         return null;
       }
@@ -583,12 +617,16 @@
       const urlPart = event.link ? event.link + '\\n\\n' : '';
       const escapedDescription = urlPart + escapeICSValue(event.description || '');
 
+      // Build DTSTART and DTEND with appropriate format (UTC or TZID).
+      const dtstart = startFormatted.isUTC ? 'DTSTART:' + startFormatted.formatted : 'DTSTART;TZID=' + eventTimezone + ':' + startFormatted.formatted;
+      const dtend = endFormatted.isUTC ? 'DTEND:' + endFormatted.formatted : 'DTEND;TZID=' + eventEndTimezone + ':' + endFormatted.formatted;
+
       const eventLines = [
         'BEGIN:VEVENT',
         foldICSLine('UID:' + uid),
         foldICSLine('DTSTAMP:' + dtstamp),
-        foldICSLine('DTSTART;TZID=' + timezone + ':' + start),
-        foldICSLine('DTEND;TZID=' + timezone + ':' + end),
+        foldICSLine(dtstart),
+        foldICSLine(dtend),
         foldICSLine('SUMMARY:' + escapedSummary),
         foldICSLine('LOCATION:' + escapedLocation),
         foldICSLine('DESCRIPTION:' + escapedDescription),
@@ -619,12 +657,29 @@
 
   /**
    * Format date for ICS (remove separators).
+   * Returns an object with formatted date string and isUTC flag.
    */
-  function formatDateForICS(dateString) {
+  function formatDateForICS(dateString, timezone) {
     if (!dateString) {
-      return '';
+      return { formatted: '', isUTC: false };
     }
-    return dateString.replace(/[-:]/g, '').replace(/\.\d+/, '');
+    
+    // If the date string ends with 'Z', it's UTC.
+    const isUTC = timezone === 'UTC' || dateString.endsWith('Z');
+    
+    // Remove separators and timezone indicator, keep just the date/time part.
+    // For UTC dates, we'll add 'Z' back in the ICS format.
+    let formatted = dateString.replace(/[-:]/g, '').replace(/\.\d+/, '').replace(/[Z+\-]\d{2}:?\d{2}$/, '');
+    
+    // For UTC dates, append 'Z' for ICS format.
+    if (isUTC) {
+      formatted = formatted + 'Z';
+    }
+    
+    return {
+      formatted: formatted,
+      isUTC: isUTC
+    };
   }
 
   /**
