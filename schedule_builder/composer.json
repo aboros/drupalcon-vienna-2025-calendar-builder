@@ -1,0 +1,22 @@
+{
+  "name": "drupal/schedule_builder",
+  "description": "Extracts standard iCal-compliant events from page HTML (title, dates, description, location, link), allows selection via checkboxes, and downloads selected events as ICS calendar files.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=8.1",
+    "drupal/core": "^10 || ^11"
+  },
+  "require-dev": {
+    "drupal/core-dev": "^10 || ^11"
+  },
+  "suggest": {
+    "cweagans/composer-patches": "Allows patching of dependencies via composer"
+  },
+  "extra": {
+    "patches": {}
+  }
+}
+
