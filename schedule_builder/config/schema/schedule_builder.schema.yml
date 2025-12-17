@@ -1,5 +1,5 @@
-schedule_builder.block.settings:
-  type: block_config
+block.settings.schedule_builder:
+  type: block_settings
   label: 'Schedule Builder block settings'
   mapping:
     event_container_selector:
