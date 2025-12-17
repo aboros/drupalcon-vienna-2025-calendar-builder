@@ -1,9 +1,20 @@
 /**
  * @file
- * Schedule Builder basic styles.
+ * Schedule Builder essential functional styles.
  */
 
-/* Checkbox styling */
+:root {
+  --schedule-builder-focus-outline-color: #006aa9;
+  --schedule-builder-focus-outline-width: 0.125rem;
+  --schedule-builder-focus-outline-offset: 0.125rem;
+  --schedule-builder-button-bg: #006aa9;
+  --schedule-builder-button-bg-hover: #005587;
+  --schedule-builder-button-text: #ffffff;
+  --schedule-builder-button-disabled-opacity: 0.5;
+  --schedule-builder-border-radius: 0.25rem;
+}
+
+/* Essential checkbox styling - functional only */
 .schedule-builder-checkbox {
   margin-right: 0.5em;
   cursor: pointer;
@@ -13,46 +24,33 @@
 }
 
 .schedule-builder-checkbox:focus {
-  outline: 2px solid #006aa9;
-  outline-offset: 2px;
+  outline: var(--schedule-builder-focus-outline-width) solid var(--schedule-builder-focus-outline-color);
+  outline-offset: var(--schedule-builder-focus-outline-offset);
 }
 
-/* Download button container */
-.schedule-builder-download-container {
-  margin: 1em 0;
-  padding: 1em;
-  text-align: center;
-}
-
-/* Download button */
+/* Essential download button styling - functional only */
 .schedule-builder-download-button {
   padding: 0.75em 1.5em;
-  background-color: #006aa9;
-  color: #ffffff;
+  background-color: var(--schedule-builder-button-bg);
+  color: var(--schedule-builder-button-text);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--schedule-builder-border-radius);
   cursor: pointer;
   font-size: 1em;
-  font-weight: 500;
   transition: background-color 0.2s;
 }
 
 .schedule-builder-download-button:hover:not(:disabled) {
-  background-color: #005587;
+  background-color: var(--schedule-builder-button-bg-hover);
 }
 
 .schedule-builder-download-button:disabled {
-  opacity: 0.5;
+  opacity: var(--schedule-builder-button-disabled-opacity);
   cursor: not-allowed;
 }
 
 .schedule-builder-download-button:focus {
-  outline: 2px solid #006aa9;
-  outline-offset: 2px;
-}
-
-/* Container */
-.schedule-builder-container {
-  /* Minimal container styling - let theme handle layout */
+  outline: var(--schedule-builder-focus-outline-width) solid var(--schedule-builder-focus-outline-color);
+  outline-offset: var(--schedule-builder-focus-outline-offset);
 }
 
