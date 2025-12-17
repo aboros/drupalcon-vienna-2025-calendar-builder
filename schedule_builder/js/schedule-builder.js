@@ -7,6 +7,11 @@
   'use strict';
 
   /**
+   * Schedule Builder namespace.
+   */
+  Drupal.scheduleBuilder = Drupal.scheduleBuilder || {};
+
+  /**
    * Schedule Builder behavior.
    */
   Drupal.behaviors.scheduleBuilder = {
@@ -33,7 +38,7 @@
         container.dataset.initialized = 'true';
 
         // Initialize the schedule builder for this block.
-        initializeScheduleBuilder(blockId, config, context);
+        Drupal.scheduleBuilder.initialize(blockId, config, context);
       });
     }
   };
@@ -41,9 +46,9 @@
   /**
    * Initialize schedule builder for a block instance.
    */
-  function initializeScheduleBuilder(blockId, config, context) {
+  Drupal.scheduleBuilder.initialize = function (blockId, config, context) {
     // Extract events from DOM.
-    const extractionResult = extractEvents(config, context);
+    const extractionResult = Drupal.scheduleBuilder.extractEvents(config, context);
     const events = extractionResult.events;
     
     if (extractionResult.containersFound === 0) {
@@ -57,7 +62,7 @@
     }
 
     // Load saved selections from localStorage.
-    const selectedEvents = loadSelections(config.localStorageKey);
+    const selectedEvents = Drupal.scheduleBuilder.loadSelections(config.localStorageKey);
 
     // Store events and config for later use BEFORE creating UI elements.
     if (!window.scheduleBuilderInstances) {
@@ -70,18 +75,17 @@
     };
 
     // Attach checkboxes to event containers.
-    attachCheckboxes(events, config, selectedEvents, context);
+    Drupal.scheduleBuilder.attachCheckboxes(events, config, selectedEvents, context);
 
     // Create download button if it doesn't exist.
-    createDownloadButton(blockId, config, events, selectedEvents);
-  }
+    Drupal.scheduleBuilder.createDownloadButton(blockId, config, events, selectedEvents);
+  };
 
   /**
    * Extract events from DOM using configured selectors.
    * Returns an object with events array and containersFound count.
    */
-  function extractEvents(config, context) {
-    const containerSelector = config.selectors.eventContainer;
+  Drupal.scheduleBuilder.extractEvents = function (config, context) {
     
     // Determine search context: use configured context selector, fall back to document.
     let searchContext = document;
@@ -127,7 +131,7 @@
           if (startEl) {
             // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
             const startValue = startEl.getAttribute('datetime') || startEl.dataset.startTime || startEl.getAttribute('data-start-time') || startEl.textContent.trim();
-            const startParsed = parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+            const startParsed = Drupal.scheduleBuilder.parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
             event.startTime = startParsed.dateTime;
             event.startTimeTimezone = startParsed.timezone;
           }
@@ -139,7 +143,7 @@
           if (endEl) {
             // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
             const endValue = endEl.getAttribute('datetime') || endEl.dataset.endTime || endEl.getAttribute('data-end-time') || endEl.textContent.trim();
-            const endParsed = parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+            const endParsed = Drupal.scheduleBuilder.parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
             event.endTime = endParsed.dateTime;
             event.endTimeTimezone = endParsed.timezone;
           }
@@ -172,7 +176,7 @@
         // Generate unique ID and add event only if all required iCal fields are present.
         // Required fields: SUMMARY (title), DTSTART (startTime), DTEND (endTime)
         if (event.summary && event.startTime && event.endTime) {
-          event.id = generateEventId(event, index);
+          event.id = Drupal.scheduleBuilder.generateEventId(event, index);
           
           // Calculate duration from start and end times.
           const start = new Date(event.startTime);
@@ -193,13 +197,13 @@
       events: events,
       containersFound: containersFound
     };
-  }
+  };
 
   /**
    * Parse date/time string into ISO 8601 format, preserving timezone information.
    * Returns an object with dateTime (ISO string in UTC) and timezone info.
    */
-  function parseDateTime(timeValue, dateElement) {
+  Drupal.scheduleBuilder.parseDateTime = function (timeValue, dateElement) {
     if (!timeValue) {
       return { dateTime: null, timezone: null };
     }
@@ -262,12 +266,12 @@
       dateTime: dateTime,
       timezone: timezone
     };
-  }
+  };
 
   /**
    * Generate unique event ID.
    */
-  function generateEventId(event, index) {
+  Drupal.scheduleBuilder.generateEventId = function (event, index) {
     const parts = [
       event.startTime ? event.startTime.split('T')[0] : '',
       event.startTime ? event.startTime.split('T')[1] : '',
@@ -275,13 +279,13 @@
       index
     ];
     return parts.filter(p => p).join('-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-  }
+  };
 
   /**
    * Extract event data from a single container.
    * Used to generate event ID for matching containers to events.
    */
-  function extractEventFromContainer(container, config, containerIndex) {
+  Drupal.scheduleBuilder.extractEventFromContainer = function (container, config, containerIndex) {
     const event = {
       id: null,
       summary: null,
@@ -353,18 +357,16 @@
     // Generate unique ID if we have all required iCal fields.
     // Required fields: SUMMARY (title), DTSTART (startTime), DTEND (endTime)
     if (event.summary && event.startTime && event.endTime) {
-      event.id = generateEventId(event, containerIndex);
+        event.id = Drupal.scheduleBuilder.generateEventId(event, containerIndex);
     }
 
     return event;
-  }
+  };
 
   /**
    * Attach checkboxes to event containers.
    */
-  function attachCheckboxes(events, config, selectedEvents, context) {
-    const containerSelector = config.selectors.eventContainer;
-    
+  Drupal.scheduleBuilder.attachCheckboxes = function (events, config, selectedEvents, context) {
     // Determine search context: use configured context selector, fall back to document.
     let searchContext = document;
     if (config.selectors.searchContext) {
@@ -374,7 +376,7 @@
       }
     }
     
-    const eventContainers = searchContext.querySelectorAll(containerSelector);
+    const eventContainers = searchContext.querySelectorAll(config.selectors.eventContainer);
 
     // Create a map of event ID to event for efficient lookup.
     const eventsById = {};
@@ -391,7 +393,7 @@
       }
 
       // Extract event data from container to generate its ID.
-      const containerEvent = extractEventFromContainer(container, config, containerIndex);
+      const containerEvent = Drupal.scheduleBuilder.extractEventFromContainer(container, config, containerIndex);
       
       // Only attach checkbox if container has required fields and matches an extracted event.
       if (!containerEvent.id) {
@@ -418,19 +420,19 @@
       // Attach click handler.
       checkbox.addEventListener('click', function (e) {
         e.stopPropagation();
-        toggleEventSelection(event.id, config);
+        Drupal.scheduleBuilder.toggleEventSelection(event.id, config);
       });
 
       // Insert checkbox at configured position.
-      insertCheckbox(checkbox, container, config.checkboxPosition);
+      Drupal.scheduleBuilder.insertCheckbox(checkbox, container, config.checkboxPosition);
     });
-  }
+  };
 
   /**
    * Insert checkbox as a direct child of the event container.
    * Position options: 'beginning' (first child) or 'end' (last child).
    */
-  function insertCheckbox(checkbox, container, position) {
+  Drupal.scheduleBuilder.insertCheckbox = function (checkbox, container, position) {
     if (position === 'end') {
       container.appendChild(checkbox);
     } else {
@@ -441,12 +443,12 @@
         container.appendChild(checkbox);
       }
     }
-  }
+  };
 
   /**
    * Toggle event selection.
    */
-  function toggleEventSelection(eventId, config) {
+  Drupal.scheduleBuilder.toggleEventSelection = function (eventId, config) {
     const instance = window.scheduleBuilderInstances[config.blockId];
     if (!instance) {
       return;
@@ -461,16 +463,16 @@
     }
 
     // Save to localStorage.
-    saveSelections(config.localStorageKey, selectedEvents);
+    Drupal.scheduleBuilder.saveSelections(config.localStorageKey, selectedEvents);
 
     // Update download button.
-    updateDownloadButton(config.blockId, config);
-  }
+    Drupal.scheduleBuilder.updateDownloadButton(config.blockId, config);
+  };
 
   /**
    * Load selections from localStorage.
    */
-  function loadSelections(localStorageKey) {
+  Drupal.scheduleBuilder.loadSelections = function (localStorageKey) {
     try {
       const saved = localStorage.getItem(localStorageKey);
       if (saved) {
@@ -480,23 +482,23 @@
       console.warn('Schedule Builder: Could not load selections from localStorage:', e);
     }
     return new Set();
-  }
+  };
 
   /**
    * Save selections to localStorage.
    */
-  function saveSelections(localStorageKey, selectedEvents) {
+  Drupal.scheduleBuilder.saveSelections = function (localStorageKey, selectedEvents) {
     try {
       localStorage.setItem(localStorageKey, JSON.stringify([...selectedEvents]));
     } catch (e) {
       console.warn('Schedule Builder: Could not save selections to localStorage:', e);
     }
-  }
+  };
 
   /**
    * Create download button.
    */
-  function createDownloadButton(blockId, config, events, selectedEvents) {
+  Drupal.scheduleBuilder.createDownloadButton = function (blockId, config, events, selectedEvents) {
     // Check if button already exists.
     const existingButton = document.querySelector('[data-schedule-builder-download="' + blockId + '"]');
     if (existingButton) {
@@ -520,20 +522,20 @@
     button.disabled = selectedEvents.size === 0;
 
     button.addEventListener('click', function () {
-      downloadICS(blockId, config, events, selectedEvents);
+      Drupal.scheduleBuilder.downloadICS(blockId, config, events, selectedEvents);
     });
 
     buttonContainer.appendChild(button);
     container.appendChild(buttonContainer);
 
     // Update button state.
-    updateDownloadButton(blockId, config);
-  }
+    Drupal.scheduleBuilder.updateDownloadButton(blockId, config);
+  };
 
   /**
    * Update download button state.
    */
-  function updateDownloadButton(blockId, config) {
+  Drupal.scheduleBuilder.updateDownloadButton = function (blockId, config) {
     const instance = window.scheduleBuilderInstances[blockId];
     if (!instance) {
       return;
@@ -543,12 +545,12 @@
     if (button) {
       button.disabled = instance.selectedEvents.size === 0;
     }
-  }
+  };
 
   /**
    * Download ICS file.
    */
-  function downloadICS(blockId, config, events, selectedEvents) {
+  Drupal.scheduleBuilder.downloadICS = function (blockId, config, events, selectedEvents) {
     const instance = window.scheduleBuilderInstances[blockId];
     if (!instance) {
       return;
@@ -563,7 +565,7 @@
       return;
     }
 
-    const icsContent = generateIcsContent(selectedEventsList, config);
+    const icsContent = Drupal.scheduleBuilder.generateIcsContent(selectedEventsList, config);
     const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -573,13 +575,13 @@
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  }
+  };
 
   /**
    * Generate ICS content for selected events.
    */
-  function generateIcsContent(events, config) {
-    const dtstamp = getCurrentTimestampICS();
+  Drupal.scheduleBuilder.generateIcsContent = function (events, config) {
+    const dtstamp = Drupal.scheduleBuilder.getCurrentTimestampICS();
     const timezone = config.timezone || 'UTC';
 
     // Filter out events missing required iCal fields (SUMMARY, DTSTART, DTEND).
@@ -599,8 +601,8 @@
       const eventEndTimezone = event.endTimeTimezone || timezone;
       
       // Format dates for ICS, preserving UTC format if applicable.
-      const startFormatted = formatDateForICS(event.startTime, eventTimezone);
-      const endFormatted = formatDateForICS(event.endTime, eventEndTimezone);
+      const startFormatted = Drupal.scheduleBuilder.formatDateForICS(event.startTime, eventTimezone);
+      const endFormatted = Drupal.scheduleBuilder.formatDateForICS(event.endTime, eventEndTimezone);
       
       // Additional safety check: ensure formatted dates are not empty.
       // This should never happen if events are properly validated, but provides extra protection.
@@ -612,10 +614,10 @@
       const uid = event.id + '@schedule-builder';
 
       // Escape special characters.
-      const escapedSummary = escapeICSValue(event.summary || '');
-      const escapedLocation = escapeICSValue(event.location || '');
+      const escapedSummary = Drupal.scheduleBuilder.escapeICSValue(event.summary || '');
+      const escapedLocation = Drupal.scheduleBuilder.escapeICSValue(event.location || '');
       const urlPart = event.link ? event.link + '\\n\\n' : '';
-      const escapedDescription = urlPart + escapeICSValue(event.description || '');
+      const escapedDescription = urlPart + Drupal.scheduleBuilder.escapeICSValue(event.description || '');
 
       // Build DTSTART and DTEND with appropriate format (UTC or TZID).
       const dtstart = startFormatted.isUTC ? 'DTSTART:' + startFormatted.formatted : 'DTSTART;TZID=' + eventTimezone + ':' + startFormatted.formatted;
@@ -623,13 +625,13 @@
 
       const eventLines = [
         'BEGIN:VEVENT',
-        foldICSLine('UID:' + uid),
-        foldICSLine('DTSTAMP:' + dtstamp),
-        foldICSLine(dtstart),
-        foldICSLine(dtend),
-        foldICSLine('SUMMARY:' + escapedSummary),
-        foldICSLine('LOCATION:' + escapedLocation),
-        foldICSLine('DESCRIPTION:' + escapedDescription),
+        Drupal.scheduleBuilder.foldICSLine('UID:' + uid),
+        Drupal.scheduleBuilder.foldICSLine('DTSTAMP:' + dtstamp),
+        Drupal.scheduleBuilder.foldICSLine(dtstart),
+        Drupal.scheduleBuilder.foldICSLine(dtend),
+        Drupal.scheduleBuilder.foldICSLine('SUMMARY:' + escapedSummary),
+        Drupal.scheduleBuilder.foldICSLine('LOCATION:' + escapedLocation),
+        Drupal.scheduleBuilder.foldICSLine('DESCRIPTION:' + escapedDescription),
         'END:VEVENT'
       ];
 
@@ -639,7 +641,7 @@
     }).join('\r\n');
 
     // Generate VTIMEZONE definition.
-    const vtimezone = generateVTIMEZONE(timezone);
+    const vtimezone = Drupal.scheduleBuilder.generateVTIMEZONE(timezone);
 
     const calendarLines = [
       'BEGIN:VCALENDAR',
@@ -653,13 +655,13 @@
     ];
 
     return calendarLines.join('\r\n');
-  }
+  };
 
   /**
    * Format date for ICS (remove separators).
    * Returns an object with formatted date string and isUTC flag.
    */
-  function formatDateForICS(dateString, timezone) {
+  Drupal.scheduleBuilder.formatDateForICS = function (dateString, timezone) {
     if (!dateString) {
       return { formatted: '', isUTC: false };
     }
@@ -680,12 +682,12 @@
       formatted: formatted,
       isUTC: isUTC
     };
-  }
+  };
 
   /**
    * Fold long lines according to RFC 5545.
    */
-  function foldICSLine(line) {
+  Drupal.scheduleBuilder.foldICSLine = function (line) {
     if (line.length <= 75) {
       return line;
     }
@@ -702,12 +704,12 @@
     }
 
     return result.join('\r\n');
-  }
+  };
 
   /**
    * Escape special characters for ICS format.
    */
-  function escapeICSValue(value) {
+  Drupal.scheduleBuilder.escapeICSValue = function (value) {
     if (!value) {
       return '';
     }
@@ -716,12 +718,12 @@
       .replace(/\n/g, '\\n')
       .replace(/,/g, '\\,')
       .replace(/;/g, '\\;');
-  }
+  };
 
   /**
    * Generate current timestamp in ICS format (UTC).
    */
-  function getCurrentTimestampICS() {
+  Drupal.scheduleBuilder.getCurrentTimestampICS = function () {
     const now = new Date();
     const year = now.getUTCFullYear();
     const month = String(now.getUTCMonth() + 1).padStart(2, '0');
@@ -730,13 +732,13 @@
     const minutes = String(now.getUTCMinutes()).padStart(2, '0');
     const seconds = String(now.getUTCSeconds()).padStart(2, '0');
     return year + month + day + 'T' + hours + minutes + seconds + 'Z';
-  }
+  };
 
   /**
    * Generate VTIMEZONE definition for a timezone.
    * Handles common timezones with proper DST rules.
    */
-  function generateVTIMEZONE(timezone) {
+  Drupal.scheduleBuilder.generateVTIMEZONE = function (timezone) {
     const tzid = timezone;
     
     // Common timezone definitions with DST rules.
@@ -853,8 +855,7 @@
         timeZone: timezone,
         timeZoneName: 'short'
       });
-      const parts = formatter.formatToParts(now);
-      const tzName = parts.find(p => p.type === 'timeZoneName');
+      formatter.formatToParts(now);
       
       // Get offset.
       const offset = -now.getTimezoneOffset();
@@ -887,7 +888,7 @@
         'END:VTIMEZONE'
       ].join('\r\n');
     }
-  }
+  };
 
 })(Drupal, drupalSettings);
 
