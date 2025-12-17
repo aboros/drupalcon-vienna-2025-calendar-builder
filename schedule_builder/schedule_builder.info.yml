@@ -1,7 +1,9 @@
 name: Schedule Builder
 type: module
-description: 'Extracts standard iCal-compliant events from page HTML (title, dates, description, location, link), allows selection via checkboxes, and downloads selected events as ICS calendar files.'
-package: Custom
+description: >
+  Extracts standard iCal-compliant events from page HTML
+  (title, dates, description, location, link), allows selection via checkboxes,
+  and downloads selected events as ICS calendar files.
+package: Other
 core_version_requirement: ^10 || ^11
-version: 1.0.0
 
