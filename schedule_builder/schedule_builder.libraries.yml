@@ -1,0 +1,9 @@
+schedule-builder:
+  css:
+    theme:
+      css/schedule-builder.css: {}
+  js:
+    js/schedule-builder.js: {}
+  dependencies:
+    - core/drupal
+

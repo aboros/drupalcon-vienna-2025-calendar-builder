@@ -12,7 +12,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
  * Provides a Schedule Builder block.
  *
  * @Block(
- *   id = "schedule_builder_block",
+ *   id = "schedule_builder",
  *   admin_label = @Translation("Schedule Builder"),
  *   category = @Translation("Custom")
  * )
