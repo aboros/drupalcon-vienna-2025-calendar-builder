@@ -24,3 +24,38 @@ function schedule_builder_help($route_name, RouteMatchInterface $route_match) {
   }
 }
 
+/**
+ * Implements hook_theme().
+ */
+function schedule_builder_theme($existing, $type, $theme, $path) {
+  return [
+    'schedule_builder_block' => [
+      'variables' => [
+        'block_id' => NULL,
+      ],
+      'template' => 'schedule-builder-block',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_library_info_build().
+ */
+function schedule_builder_library_info_build() {
+  $libraries = [];
+  $libraries['schedule-builder'] = [
+    'css' => [
+      'theme' => [
+        'css/schedule-builder.css' => [],
+      ],
+    ],
+    'js' => [
+      'js/schedule-builder.js' => [],
+    ],
+    'dependencies' => [
+      'core/drupal',
+    ],
+  ];
+  return $libraries;
+}
+

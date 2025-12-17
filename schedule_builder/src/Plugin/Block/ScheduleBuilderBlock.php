@@ -268,44 +268,66 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
   }
 
   /**
-   * {@inheritdoc}
+   * Generates a unique block ID for this instance.
+   *
+   * @return string
+   *   The unique block ID.
    */
-  public function build() {
+  protected function generateBlockId() {
     $config = $this->getConfiguration();
-
-    // Generate unique block ID for this instance.
-    // Use a hash of the localStorage key (which should be unique per instance).
     $block_id = $this->getPluginId();
     if (!empty($config['localStorage_key'])) {
       // Use localStorage key as part of ID to ensure uniqueness.
       $block_id .= '_' . preg_replace('/[^a-z0-9_]/', '_', strtolower($config['localStorage_key']));
-    } else {
+    }
+    else {
       // Fallback: use a hash of configuration.
       $block_id .= '_' . substr(md5(serialize($config)), 0, 8);
     }
+    return $block_id;
+  }
 
-    // Prepare settings for JavaScript.
-    $settings = [
+  /**
+   * Converts block settings to JavaScript settings array.
+   *
+   * @param string $block_id
+   *   The unique block ID.
+   *
+   * @return array
+   *   The JavaScript settings array.
+   */
+  protected function convertSettingsToJs($block_id) {
+    $config = $this->getConfiguration();
+    return [
       'blockId' => $block_id,
       'selectors' => [
-        'searchContext' => $config['search_context_selector'] ?: null,
+        'searchContext' => $config['search_context_selector'] ?: NULL,
         'eventContainer' => $config['event_container_selector'],
         'title' => $config['event_title_selector'],
         'startTime' => $config['event_start_time_selector'],
         'endTime' => $config['event_end_time_selector'],
-        'date' => $config['event_date_selector'] ?: null,
-        'location' => $config['event_location_selector'] ?: null,
-        'description' => $config['event_description_selector'] ?: null,
-        'link' => $config['event_link_selector'] ?: null,
+        'date' => $config['event_date_selector'] ?: NULL,
+        'location' => $config['event_location_selector'] ?: NULL,
+        'description' => $config['event_description_selector'] ?: NULL,
+        'link' => $config['event_link_selector'] ?: NULL,
       ],
       'timezone' => $config['timezone'],
       'localStorageKey' => $config['localStorage_key'],
       'icsFilename' => $config['ics_filename'],
       'checkboxPosition' => $config['checkbox_position'],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build() {
+    $block_id = $this->generateBlockId();
+    $settings = $this->convertSettingsToJs($block_id);
 
     $build = [
-      '#markup' => '<div class="schedule-builder-container" data-block-id="' . htmlspecialchars($block_id, ENT_QUOTES, 'UTF-8') . '"></div>',
+      '#theme' => 'schedule_builder_block',
+      '#block_id' => $block_id,
       '#attached' => [
         'library' => [
           'schedule_builder/schedule-builder',
