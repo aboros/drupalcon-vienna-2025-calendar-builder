@@ -184,8 +184,8 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
 
     $form['timezone'] = [
       '#type' => 'select',
-      '#title' => $this->t('Timezone'),
-      '#description' => $this->t('Timezone for ICS file generation. Defaults to site timezone.'),
+      '#title' => $this->t('Default Timezone'),
+      '#description' => $this->t('Default timezone used when parsing date/time values that lack timezone information in the source HTML. Dates with explicit timezone information (ISO 8601 format with offset or Z) will be converted to UTC automatically. Defaults to site timezone.'),
       '#options' => $timezones,
       '#default_value' => $default_timezone,
       '#required' => TRUE,

@@ -37,7 +37,7 @@ The module focuses on standard iCal (RFC 5545) compliant fields: event title (SU
      - **Event Location Selector** (optional): e.g., `.location`, `[data-location]`
      - **Event Description Selector** (optional): e.g., `.description`
      - **Event Link Selector** (optional): e.g., `a.session-link`
-   - Set **Timezone** for ICS file generation (defaults to site timezone)
+   - Set **Default Timezone** for interpreting date/time values that lack timezone information (defaults to site timezone). Dates with explicit timezone information in the source HTML will be converted to UTC automatically.
    - Configure **LocalStorage Key** (unique per block instance, auto-generated if empty)
    - Set **ICS Filename** for downloaded files (without .ics extension)
    - Choose **Checkbox Position** (beginning or end of event container)
@@ -84,7 +84,9 @@ The module also supports:
 - **ISO 8601 with timezone**: `2025-10-14T09:30:00+02:00` or `2025-10-14T09:30:00Z`
 - **Separate date selector**: If dates and times are in separate elements, use the optional Event Date Selector
 
-For best results, use ISO 8601 format in `datetime` attributes or data attributes. The module preserves timezone information when available.
+For best results, use ISO 8601 format in `datetime` attributes or data attributes. 
+- **Dates with timezone information**: Automatically converted to UTC for consistent storage
+- **Dates without timezone information**: Interpreted using the configured Default Timezone setting, then converted to UTC
 
 ### LocalStorage
 
@@ -118,7 +120,7 @@ Downloaded files can be imported into:
 - **Event Title Selector**: Selector for event title/summary (maps to iCal SUMMARY)
 - **Event Start Time Selector**: Selector for start time (maps to iCal DTSTART)
 - **Event End Time Selector**: Selector for end time (maps to iCal DTEND)
-- **Timezone**: Timezone for ICS generation (defaults to site timezone)
+- **Default Timezone**: Default timezone used when parsing date/time values that lack timezone information in the source HTML (defaults to site timezone). Dates with explicit timezone information (ISO 8601 format with offset or Z) will be converted to UTC automatically.
 - **LocalStorage Key**: Unique key for storing selections (auto-generated if empty)
 - **ICS Filename**: Filename for downloaded files (without .ics extension)
 - **Download Button Label**: Text displayed on the download button
@@ -247,6 +249,7 @@ Only one instance should be placed per page path to avoid conflicts.
 - Use ISO 8601 format when possible: `2025-10-14T09:30:00`
 - Prefer `datetime` attribute on `<time>` elements or data attributes over text content
 - Include timezone information when available: `2025-10-14T09:30:00+02:00` or `2025-10-14T09:30:00Z`
+- If dates lack timezone information, ensure the **Default Timezone** is configured correctly to match your source data's timezone
 - Check browser console for parsing warnings
 - If using separate date and time elements, configure the Event Date Selector
 

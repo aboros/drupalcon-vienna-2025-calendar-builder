@@ -136,7 +136,7 @@
           if (startEl) {
             // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
             const startValue = startEl.getAttribute('datetime') || startEl.dataset.startTime || startEl.getAttribute('data-start-time') || startEl.textContent.trim();
-            const startParsed = Drupal.scheduleBuilder.parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+            const startParsed = Drupal.scheduleBuilder.parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null, config.timezone);
             event.startTime = startParsed.dateTime;
             event.startTimeTimezone = startParsed.timezone;
           }
@@ -148,7 +148,7 @@
           if (endEl) {
             // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
             const endValue = endEl.getAttribute('datetime') || endEl.dataset.endTime || endEl.getAttribute('data-end-time') || endEl.textContent.trim();
-            const endParsed = Drupal.scheduleBuilder.parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+            const endParsed = Drupal.scheduleBuilder.parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null, config.timezone);
             event.endTime = endParsed.dateTime;
             event.endTimeTimezone = endParsed.timezone;
           }
@@ -207,30 +207,13 @@
   /**
    * Parse date/time string into ISO 8601 format, preserving timezone information.
    * Returns an object with dateTime (ISO string in UTC) and timezone info.
+   * 
+   * @param {string} timeValue - The date/time string to parse
+   * @param {HTMLElement} dateElement - Optional date element if date is separate from time
+   * @param {string} defaultTimezone - Default timezone to use when timezone info is missing (e.g., 'Europe/Vienna')
    */
-  Drupal.scheduleBuilder.parseDateTime = function (timeValue, dateElement) {
+  Drupal.scheduleBuilder.parseDateTime = function (timeValue, dateElement, defaultTimezone) {
     if (!timeValue) {
-      return { dateTime: null, timezone: null };
-    }
-
-    // Try to parse as Date object (handles ISO 8601 with timezone automatically).
-    let dateObj = new Date(timeValue);
-    
-    // If date element provided, try to combine date + time.
-    if (dateElement && isNaN(dateObj.getTime())) {
-      const dateValue = dateElement.textContent.trim() || dateElement.dataset.date || dateElement.getAttribute('data-date');
-      if (dateValue) {
-        dateObj = new Date(dateValue + ' ' + timeValue);
-      }
-    }
-
-    // If still invalid, try common formats.
-    if (isNaN(dateObj.getTime())) {
-      dateObj = new Date(timeValue);
-    }
-
-    if (isNaN(dateObj.getTime())) {
-      console.warn('Schedule Builder: Could not parse date/time:', timeValue);
       return { dateTime: null, timezone: null };
     }
 
@@ -254,6 +237,123 @@
       }
     }
 
+    let dateObj;
+    
+    if (hadTimezone) {
+      // Input has timezone info, let JavaScript Date parse it directly.
+      dateObj = new Date(timeValue);
+      
+      // If date element provided, try to combine date + time (though this shouldn't happen with timezone).
+      if (dateElement && isNaN(dateObj.getTime())) {
+        const dateValue = dateElement.textContent.trim() || dateElement.dataset.date || dateElement.getAttribute('data-date');
+        if (dateValue) {
+          dateObj = new Date(dateValue + ' ' + timeValue);
+        }
+      }
+    } else {
+      // No timezone info in input - interpret using default timezone.
+      // First, try to parse the date/time components.
+      const dateTimeMatch = timeValue.match(/^(\d{4})-?(\d{2})-?(\d{2})[T ](\d{2}):?(\d{2}):?(\d{2})?/);
+      
+      if (dateTimeMatch && defaultTimezone && defaultTimezone !== 'UTC') {
+        // Extract date/time components.
+        const year = parseInt(dateTimeMatch[1], 10);
+        const month = parseInt(dateTimeMatch[2], 10) - 1; // JavaScript months are 0-indexed
+        const day = parseInt(dateTimeMatch[3], 10);
+        const hours = parseInt(dateTimeMatch[4], 10);
+        const minutes = parseInt(dateTimeMatch[5], 10);
+        const seconds = dateTimeMatch[6] ? parseInt(dateTimeMatch[6], 10) : 0;
+        
+        // Convert date/time from default timezone to UTC using Intl API.
+        // Strategy: Create a UTC date with the components, format it in the target timezone,
+        // calculate the offset, and adjust once.
+        try {
+          // Create a UTC date with our components (treating them as UTC initially).
+          const utcGuess = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+          
+          // Format this UTC date in the target timezone to see what local time it represents.
+          const formatter = new Intl.DateTimeFormat('en-CA', {
+            timeZone: defaultTimezone,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          });
+          
+          const formatted = formatter.format(utcGuess);
+          const match = formatted.match(/(\d{4})-(\d{2})-(\d{2}), (\d{2}):(\d{2}):(\d{2})/);
+          
+          if (!match) {
+            throw new Error('Could not parse formatted date');
+          }
+          
+          const formattedYear = parseInt(match[1], 10);
+          const formattedMonth = parseInt(match[2], 10) - 1;
+          const formattedDay = parseInt(match[3], 10);
+          const formattedHour = parseInt(match[4], 10);
+          const formattedMinute = parseInt(match[5], 10);
+          const formattedSecond = parseInt(match[6], 10);
+          
+          // Calculate the offset: difference between target local time and what our UTC guess represents.
+          // Create date objects in the browser's local timezone for comparison.
+          const targetLocal = new Date(year, month, day, hours, minutes, seconds);
+          const formattedLocal = new Date(formattedYear, formattedMonth, formattedDay, formattedHour, formattedMinute, formattedSecond);
+          const offsetMs = targetLocal.getTime() - formattedLocal.getTime();
+          
+          // Adjust UTC date by the calculated offset (single adjustment).
+          dateObj = new Date(utcGuess.getTime() + offsetMs);
+          timezone = defaultTimezone;
+        } catch (e) {
+          // Fallback: parse normally and use default timezone label.
+          console.warn('Schedule Builder: Error parsing date with timezone ' + defaultTimezone + ', falling back to default parsing:', e);
+          dateObj = new Date(timeValue);
+          if (dateElement && isNaN(dateObj.getTime())) {
+            const dateValue = dateElement.textContent.trim() || dateElement.dataset.date || dateElement.getAttribute('data-date');
+            if (dateValue) {
+              dateObj = new Date(dateValue + ' ' + timeValue);
+            }
+          }
+          
+          if (isNaN(dateObj.getTime())) {
+            console.warn('Schedule Builder: Could not parse date/time:', timeValue);
+            return { dateTime: null, timezone: null };
+          }
+          
+          timezone = defaultTimezone;
+        }
+      } else {
+        // Fallback: parse as normal JavaScript Date (interprets as local time).
+        dateObj = new Date(timeValue);
+        if (dateElement && isNaN(dateObj.getTime())) {
+          const dateValue = dateElement.textContent.trim() || dateElement.dataset.date || dateElement.getAttribute('data-date');
+          if (dateValue) {
+            dateObj = new Date(dateValue + ' ' + timeValue);
+          }
+        }
+        
+        // If still invalid, try common formats.
+        if (isNaN(dateObj.getTime())) {
+          dateObj = new Date(timeValue);
+        }
+        
+        if (isNaN(dateObj.getTime())) {
+          console.warn('Schedule Builder: Could not parse date/time:', timeValue);
+          return { dateTime: null, timezone: null };
+        }
+        
+        // Use default timezone if provided, otherwise UTC.
+        timezone = defaultTimezone || 'UTC';
+      }
+    }
+
+    if (isNaN(dateObj.getTime())) {
+      console.warn('Schedule Builder: Could not parse date/time:', timeValue);
+      return { dateTime: null, timezone: null };
+    }
+
     // Convert to ISO 8601 format in UTC (for consistent storage).
     // The Date object has already converted to UTC if timezone was present.
     const year = dateObj.getUTCFullYear();
@@ -263,9 +363,9 @@
     const minutes = String(dateObj.getUTCMinutes()).padStart(2, '0');
     const seconds = String(dateObj.getUTCSeconds()).padStart(2, '0');
 
-    // Return UTC time with 'Z' indicator if the original had a timezone.
-    // This ensures we use UTC format in ICS, preserving the moment in time.
-    const dateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds + (hadTimezone ? 'Z' : '');
+    // Return UTC time. We'll use 'Z' suffix only if the original had timezone info and it was UTC.
+    // For dates parsed with default timezone, we'll use TZID format in ICS generation.
+    const dateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds + (hadTimezone && timezone === 'UTC' ? 'Z' : '');
 
     return {
       dateTime: dateTime,
@@ -317,7 +417,7 @@
       if (startEl) {
         // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
         const startValue = startEl.getAttribute('datetime') || startEl.dataset.startTime || startEl.getAttribute('data-start-time') || startEl.textContent.trim();
-        const startParsed = Drupal.scheduleBuilder.parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+        const startParsed = Drupal.scheduleBuilder.parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null, config.timezone);
         event.startTime = startParsed.dateTime;
         event.startTimeTimezone = startParsed.timezone;
       }
@@ -329,7 +429,7 @@
       if (endEl) {
         // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
         const endValue = endEl.getAttribute('datetime') || endEl.dataset.endTime || endEl.getAttribute('data-end-time') || endEl.textContent.trim();
-        const endParsed = Drupal.scheduleBuilder.parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+        const endParsed = Drupal.scheduleBuilder.parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null, config.timezone);
         event.endTime = endParsed.dateTime;
         event.endTimeTimezone = endParsed.timezone;
       }

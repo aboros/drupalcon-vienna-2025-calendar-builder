@@ -36,7 +36,7 @@ block.settings.schedule_builder:
       nullable: true
     timezone:
       type: string
-      label: 'Timezone'
+      label: 'Default timezone'
     localStorage_key:
       type: string
       label: 'LocalStorage key'
