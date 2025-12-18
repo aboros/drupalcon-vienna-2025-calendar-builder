@@ -79,6 +79,11 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       'checkbox_extra_classes' => '',
       'download_button_label' => 'Download Selected Events as ICS',
       'download_button_extra_classes' => '',
+      'enable_selection_filter' => TRUE,
+      'enable_select_actions' => TRUE,
+      'filter_extra_classes' => '',
+      'select_all_button_extra_classes' => '',
+      'deselect_all_button_extra_classes' => '',
     ];
   }
 
@@ -241,6 +246,59 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       '#required' => FALSE,
     ];
 
+    $form['enable_selection_filter'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable Selection Filter'),
+      '#description' => $this->t('Show a dropdown filter to display all, selected, or unselected events.'),
+      '#default_value' => $config['enable_selection_filter'],
+    ];
+
+    $form['enable_select_actions'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable Select All / Deselect All Buttons'),
+      '#description' => $this->t('Show buttons to quickly select or deselect all currently displayed events.'),
+      '#default_value' => $config['enable_select_actions'],
+    ];
+
+    $form['filter_extra_classes'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Extra Classes for Filter Dropdown'),
+      '#description' => $this->t('Additional CSS classes to add to the selection filter dropdown (space-separated, e.g., "form-select").'),
+      '#default_value' => $config['filter_extra_classes'],
+      '#required' => FALSE,
+      '#states' => [
+        'visible' => [
+          ':input[name="settings[enable_selection_filter]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    $form['select_all_button_extra_classes'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Extra Classes for Select All Button'),
+      '#description' => $this->t('Additional CSS classes to add to the "Select all" button (space-separated, e.g., "btn btn-primary").'),
+      '#default_value' => $config['select_all_button_extra_classes'],
+      '#required' => FALSE,
+      '#states' => [
+        'visible' => [
+          ':input[name="settings[enable_select_actions]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    $form['deselect_all_button_extra_classes'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Extra Classes for Deselect All Button'),
+      '#description' => $this->t('Additional CSS classes to add to the "Deselect all" button (space-separated, e.g., "btn btn-secondary").'),
+      '#default_value' => $config['deselect_all_button_extra_classes'],
+      '#required' => FALSE,
+      '#states' => [
+        'visible' => [
+          ':input[name="settings[enable_select_actions]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
     return $form;
   }
 
@@ -295,6 +353,11 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
     $this->setConfigurationValue('checkbox_extra_classes', $form_state->getValue('checkbox_extra_classes'));
     $this->setConfigurationValue('download_button_label', $form_state->getValue('download_button_label'));
     $this->setConfigurationValue('download_button_extra_classes', $form_state->getValue('download_button_extra_classes'));
+    $this->setConfigurationValue('enable_selection_filter', $form_state->getValue('enable_selection_filter'));
+    $this->setConfigurationValue('enable_select_actions', $form_state->getValue('enable_select_actions'));
+    $this->setConfigurationValue('filter_extra_classes', $form_state->getValue('filter_extra_classes'));
+    $this->setConfigurationValue('select_all_button_extra_classes', $form_state->getValue('select_all_button_extra_classes'));
+    $this->setConfigurationValue('deselect_all_button_extra_classes', $form_state->getValue('deselect_all_button_extra_classes'));
   }
 
   /**
@@ -346,6 +409,8 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       'icsFilename' => $config['ics_filename'],
       'checkboxPosition' => $config['checkbox_position'],
       'checkboxExtraClasses' => $config['checkbox_extra_classes'] ?: NULL,
+      'enableSelectionFilter' => !empty($config['enable_selection_filter']),
+      'enableSelectActions' => !empty($config['enable_select_actions']),
     ];
   }
 
@@ -362,6 +427,11 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       '#block_id' => $block_id,
       '#download_button_label' => $config['download_button_label'],
       '#download_button_extra_classes' => $config['download_button_extra_classes'],
+      '#enable_selection_filter' => !empty($config['enable_selection_filter']),
+      '#enable_select_actions' => !empty($config['enable_select_actions']),
+      '#filter_extra_classes' => $config['filter_extra_classes'],
+      '#select_all_button_extra_classes' => $config['select_all_button_extra_classes'],
+      '#deselect_all_button_extra_classes' => $config['deselect_all_button_extra_classes'],
       '#attached' => [
         'library' => [
           'schedule_builder/schedule-builder',

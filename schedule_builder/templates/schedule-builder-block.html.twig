@@ -7,11 +7,35 @@
  * - block_id: The unique block ID for this instance.
  * - download_button_label: The label text for the download button.
  * - download_button_extra_classes: Additional CSS classes for the download button.
+ * - enable_selection_filter: Whether to show the selection filter dropdown.
+ * - enable_select_actions: Whether to show the select all/deselect all buttons.
+ * - filter_extra_classes: Additional CSS classes for the filter dropdown.
+ * - select_all_button_extra_classes: Additional CSS classes for the select all button.
+ * - deselect_all_button_extra_classes: Additional CSS classes for the deselect all button.
  *
  * @ingroup themeable
  */
 #}
 <div class="schedule-builder-container" data-block-id="{{ block_id }}">
+  {% if enable_selection_filter or enable_select_actions %}
+  <div class="schedule-builder-controls">
+    {% if enable_selection_filter %}
+    <div class="schedule-builder-filter">
+      <select id="schedule-builder-selection-filter-{{ block_id }}" class="schedule-builder-selection-filter{{ filter_extra_classes ? ' ' ~ filter_extra_classes }}" data-schedule-builder-filter="{{ block_id }}">
+        <option value="all">{{ 'Show all'|t }}</option>
+        <option value="selected">{{ 'Show selected only'|t }}</option>
+        <option value="unselected">{{ 'Show unselected only'|t }}</option>
+      </select>
+    </div>
+    {% endif %}
+    {% if enable_select_actions %}
+    <div class="schedule-builder-actions">
+      <button type="button" class="schedule-builder-select-all{{ select_all_button_extra_classes ? ' ' ~ select_all_button_extra_classes }}" data-schedule-builder-select-all="{{ block_id }}">{{ 'Select all'|t }}</button>
+      <button type="button" class="schedule-builder-deselect-all{{ deselect_all_button_extra_classes ? ' ' ~ deselect_all_button_extra_classes }}" data-schedule-builder-deselect-all="{{ block_id }}">{{ 'Deselect all'|t }}</button>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
   <div class="schedule-builder-download-container">
     <button type="button" class="schedule-builder-download-button{{ download_button_extra_classes ? ' ' ~ download_button_extra_classes }}" data-schedule-builder-download="{{ block_id }}" disabled>
       {{ download_button_label }}

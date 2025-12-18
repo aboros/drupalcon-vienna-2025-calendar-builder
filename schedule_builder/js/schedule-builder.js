@@ -79,6 +79,11 @@
 
     // Create download button if it doesn't exist.
     Drupal.scheduleBuilder.createDownloadButton(blockId, config, events, selectedEvents);
+
+    // Initialize filter and action controls if enabled.
+    if (config.enableSelectionFilter || config.enableSelectActions) {
+      Drupal.scheduleBuilder.initializeControls(blockId, config);
+    }
   };
 
   /**
@@ -426,6 +431,10 @@
       checkbox.addEventListener('click', function (e) {
         e.stopPropagation();
         Drupal.scheduleBuilder.toggleEventSelection(event.id, config);
+        // Re-apply filter after selection change.
+        if (config.enableSelectionFilter) {
+          Drupal.scheduleBuilder.applySelectionFilter(config.blockId, config);
+        }
       });
 
       // Insert checkbox at configured position.
@@ -735,6 +744,239 @@
     const minutes = String(now.getUTCMinutes()).padStart(2, '0');
     const seconds = String(now.getUTCSeconds()).padStart(2, '0');
     return year + month + day + 'T' + hours + minutes + seconds + 'Z';
+  };
+
+  /**
+   * Initialize filter and action controls.
+   */
+  Drupal.scheduleBuilder.initializeControls = function (blockId, config) {
+    const container = document.querySelector('[data-block-id="' + blockId + '"]');
+    if (!container) {
+      return;
+    }
+
+    // Initialize selection filter dropdown.
+    if (config.enableSelectionFilter) {
+      const filterSelect = container.querySelector('[data-schedule-builder-filter="' + blockId + '"]');
+      if (filterSelect) {
+        filterSelect.addEventListener('change', function () {
+          Drupal.scheduleBuilder.applySelectionFilter(blockId, config);
+        });
+      }
+    }
+
+    // Initialize select all button.
+    if (config.enableSelectActions) {
+      const selectAllButton = container.querySelector('[data-schedule-builder-select-all="' + blockId + '"]');
+      if (selectAllButton) {
+        selectAllButton.addEventListener('click', function () {
+          Drupal.scheduleBuilder.selectAllDisplayed(blockId, config);
+        });
+      }
+
+      // Initialize deselect all button.
+      const deselectAllButton = container.querySelector('[data-schedule-builder-deselect-all="' + blockId + '"]');
+      if (deselectAllButton) {
+        deselectAllButton.addEventListener('click', function () {
+          Drupal.scheduleBuilder.deselectAllDisplayed(blockId, config);
+        });
+      }
+    }
+  };
+
+  /**
+   * Apply selection filter to show/hide event containers.
+   */
+  Drupal.scheduleBuilder.applySelectionFilter = function (blockId, config) {
+    const instance = window.scheduleBuilderInstances[blockId];
+    if (!instance) {
+      return;
+    }
+
+    const container = document.querySelector('[data-block-id="' + blockId + '"]');
+    if (!container) {
+      return;
+    }
+
+    const filterSelect = container.querySelector('[data-schedule-builder-filter="' + blockId + '"]');
+    if (!filterSelect) {
+      return;
+    }
+
+    const filterValue = filterSelect.value;
+    const selectedEvents = instance.selectedEvents;
+
+    // Determine search context.
+    let searchContext = document;
+    if (config.selectors.searchContext) {
+      const customContext = document.querySelector(config.selectors.searchContext);
+      if (customContext) {
+        searchContext = customContext;
+      }
+    }
+
+    const eventContainers = searchContext.querySelectorAll(config.selectors.eventContainer);
+
+    eventContainers.forEach(function (eventContainer) {
+      // Extract event data from container to generate its ID.
+      const containerIndex = Array.from(eventContainers).indexOf(eventContainer);
+      const containerEvent = Drupal.scheduleBuilder.extractEventFromContainer(eventContainer, config, containerIndex);
+
+      if (!containerEvent.id) {
+        // If we can't identify the event, show it by default.
+        eventContainer.style.display = '';
+        return;
+      }
+
+      const isSelected = selectedEvents.has(containerEvent.id);
+      let shouldShow = true;
+
+      if (filterValue === 'selected') {
+        shouldShow = isSelected;
+      } else if (filterValue === 'unselected') {
+        shouldShow = !isSelected;
+      }
+      // 'all' shows everything, so shouldShow remains true.
+
+      eventContainer.style.display = shouldShow ? '' : 'none';
+    });
+  };
+
+  /**
+   * Select all currently displayed events.
+   */
+  Drupal.scheduleBuilder.selectAllDisplayed = function (blockId, config) {
+    const instance = window.scheduleBuilderInstances[blockId];
+    if (!instance) {
+      return;
+    }
+
+    const selectedEvents = instance.selectedEvents;
+    let addedCount = 0;
+
+    // Determine search context.
+    let searchContext = document;
+    if (config.selectors.searchContext) {
+      const customContext = document.querySelector(config.selectors.searchContext);
+      if (customContext) {
+        searchContext = customContext;
+      }
+    }
+
+    const eventContainers = searchContext.querySelectorAll(config.selectors.eventContainer);
+
+    eventContainers.forEach(function (eventContainer) {
+      // Skip hidden containers (filtered out).
+      if (eventContainer.style.display === 'none') {
+        return;
+      }
+
+      // Extract event data from container to generate its ID.
+      const containerIndex = Array.from(eventContainers).indexOf(eventContainer);
+      const containerEvent = Drupal.scheduleBuilder.extractEventFromContainer(eventContainer, config, containerIndex);
+
+      if (!containerEvent.id) {
+        return;
+      }
+
+      // Check if this event is in our events list.
+      const event = instance.events.find(function (e) {
+        return e.id === containerEvent.id;
+      });
+
+      if (!event) {
+        return;
+      }
+
+      // Add to selection if not already selected.
+      if (!selectedEvents.has(containerEvent.id)) {
+        selectedEvents.add(containerEvent.id);
+        addedCount++;
+
+        // Update checkbox state.
+        const checkbox = eventContainer.querySelector('.schedule-builder-checkbox[data-event-id="' + containerEvent.id + '"]');
+        if (checkbox) {
+          checkbox.checked = true;
+        }
+      }
+    });
+
+    if (addedCount > 0) {
+      // Save to localStorage.
+      Drupal.scheduleBuilder.saveSelections(config.localStorageKey, selectedEvents);
+
+      // Update download button.
+      Drupal.scheduleBuilder.updateDownloadButton(blockId, config);
+
+      // Re-apply filter if enabled.
+      if (config.enableSelectionFilter) {
+        Drupal.scheduleBuilder.applySelectionFilter(blockId, config);
+      }
+    }
+  };
+
+  /**
+   * Deselect all currently displayed events.
+   */
+  Drupal.scheduleBuilder.deselectAllDisplayed = function (blockId, config) {
+    const instance = window.scheduleBuilderInstances[blockId];
+    if (!instance) {
+      return;
+    }
+
+    const selectedEvents = instance.selectedEvents;
+    let removedCount = 0;
+
+    // Determine search context.
+    let searchContext = document;
+    if (config.selectors.searchContext) {
+      const customContext = document.querySelector(config.selectors.searchContext);
+      if (customContext) {
+        searchContext = customContext;
+      }
+    }
+
+    const eventContainers = searchContext.querySelectorAll(config.selectors.eventContainer);
+
+    eventContainers.forEach(function (eventContainer) {
+      // Skip hidden containers (filtered out).
+      if (eventContainer.style.display === 'none') {
+        return;
+      }
+
+      // Extract event data from container to generate its ID.
+      const containerIndex = Array.from(eventContainers).indexOf(eventContainer);
+      const containerEvent = Drupal.scheduleBuilder.extractEventFromContainer(eventContainer, config, containerIndex);
+
+      if (!containerEvent.id) {
+        return;
+      }
+
+      // Remove from selection if selected.
+      if (selectedEvents.has(containerEvent.id)) {
+        selectedEvents.delete(containerEvent.id);
+        removedCount++;
+
+        // Update checkbox state.
+        const checkbox = eventContainer.querySelector('.schedule-builder-checkbox[data-event-id="' + containerEvent.id + '"]');
+        if (checkbox) {
+          checkbox.checked = false;
+        }
+      }
+    });
+
+    if (removedCount > 0) {
+      // Save to localStorage.
+      Drupal.scheduleBuilder.saveSelections(config.localStorageKey, selectedEvents);
+
+      // Update download button.
+      Drupal.scheduleBuilder.updateDownloadButton(blockId, config);
+
+      // Re-apply filter if enabled.
+      if (config.enableSelectionFilter) {
+        Drupal.scheduleBuilder.applySelectionFilter(blockId, config);
+      }
+    }
   };
 
   /**

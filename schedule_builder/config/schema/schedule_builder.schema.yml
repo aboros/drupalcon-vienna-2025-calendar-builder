@@ -57,4 +57,22 @@ block.settings.schedule_builder:
       type: string
       label: 'Extra classes for download button'
       nullable: true
+    enable_selection_filter:
+      type: boolean
+      label: 'Enable selection filter'
+    enable_select_actions:
+      type: boolean
+      label: 'Enable select actions'
+    filter_extra_classes:
+      type: string
+      label: 'Extra classes for filter dropdown'
+      nullable: true
+    select_all_button_extra_classes:
+      type: string
+      label: 'Extra classes for select all button'
+      nullable: true
+    deselect_all_button_extra_classes:
+      type: string
+      label: 'Extra classes for deselect all button'
+      nullable: true
 
