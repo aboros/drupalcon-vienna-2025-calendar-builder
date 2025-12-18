@@ -32,6 +32,8 @@ function schedule_builder_theme($existing, $type, $theme, $path) {
     'schedule_builder_block' => [
       'variables' => [
         'block_id' => NULL,
+        'download_button_label' => NULL,
+        'download_button_extra_classes' => NULL,
       ],
       'template' => 'schedule-builder-block',
     ],

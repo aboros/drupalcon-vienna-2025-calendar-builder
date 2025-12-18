@@ -46,4 +46,15 @@ block.settings.schedule_builder:
     checkbox_position:
       type: string
       label: 'Checkbox position'
+    checkbox_extra_classes:
+      type: string
+      label: 'Extra classes for checkbox'
+      nullable: true
+    download_button_label:
+      type: string
+      label: 'Download button label'
+    download_button_extra_classes:
+      type: string
+      label: 'Extra classes for download button'
+      nullable: true
 

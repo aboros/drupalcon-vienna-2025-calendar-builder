@@ -76,6 +76,9 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       'localStorage_key' => '',
       'ics_filename' => 'schedule-selected-events',
       'checkbox_position' => 'beginning',
+      'checkbox_extra_classes' => '',
+      'download_button_label' => 'Download Selected Events as ICS',
+      'download_button_extra_classes' => '',
     ];
   }
 
@@ -214,6 +217,30 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       '#default_value' => $config['checkbox_position'],
     ];
 
+    $form['checkbox_extra_classes'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Extra Classes for Checkbox'),
+      '#description' => $this->t('Additional CSS classes to add to the checkbox element (space-separated, e.g., "form-check-input").'),
+      '#default_value' => $config['checkbox_extra_classes'],
+      '#required' => FALSE,
+    ];
+
+    $form['download_button_label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Download Button Label'),
+      '#description' => $this->t('The text displayed on the download button.'),
+      '#default_value' => $config['download_button_label'],
+      '#required' => TRUE,
+    ];
+
+    $form['download_button_extra_classes'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Extra Classes for Download Button'),
+      '#description' => $this->t('Additional CSS classes to add to the download button (space-separated, e.g., "btn btn-primary").'),
+      '#default_value' => $config['download_button_extra_classes'],
+      '#required' => FALSE,
+    ];
+
     return $form;
   }
 
@@ -265,6 +292,9 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
     $this->setConfigurationValue('localStorage_key', $form_state->getValue('localStorage_key'));
     $this->setConfigurationValue('ics_filename', $form_state->getValue('ics_filename'));
     $this->setConfigurationValue('checkbox_position', $form_state->getValue('checkbox_position'));
+    $this->setConfigurationValue('checkbox_extra_classes', $form_state->getValue('checkbox_extra_classes'));
+    $this->setConfigurationValue('download_button_label', $form_state->getValue('download_button_label'));
+    $this->setConfigurationValue('download_button_extra_classes', $form_state->getValue('download_button_extra_classes'));
   }
 
   /**
@@ -315,6 +345,7 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       'localStorageKey' => $config['localStorage_key'],
       'icsFilename' => $config['ics_filename'],
       'checkboxPosition' => $config['checkbox_position'],
+      'checkboxExtraClasses' => $config['checkbox_extra_classes'] ?: NULL,
     ];
   }
 
@@ -324,10 +355,13 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
   public function build() {
     $block_id = $this->generateBlockId();
     $settings = $this->convertSettingsToJs($block_id);
+    $config = $this->getConfiguration();
 
     $build = [
       '#theme' => 'schedule_builder_block',
       '#block_id' => $block_id,
+      '#download_button_label' => $config['download_button_label'],
+      '#download_button_extra_classes' => $config['download_button_extra_classes'],
       '#attached' => [
         'library' => [
           'schedule_builder/schedule-builder',

@@ -5,8 +5,16 @@
  *
  * Available variables:
  * - block_id: The unique block ID for this instance.
+ * - download_button_label: The label text for the download button.
+ * - download_button_extra_classes: Additional CSS classes for the download button.
  *
  * @ingroup themeable
  */
 #}
-<div class="schedule-builder-container" data-block-id="{{ block_id }}"></div>
+<div class="schedule-builder-container" data-block-id="{{ block_id }}">
+  <div class="schedule-builder-download-container">
+    <button type="button" class="schedule-builder-download-button{{ download_button_extra_classes ? ' ' ~ download_button_extra_classes }}" data-schedule-builder-download="{{ block_id }}" disabled>
+      {{ download_button_label }}
+    </button>
+  </div>
+</div>

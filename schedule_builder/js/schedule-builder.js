@@ -409,7 +409,12 @@
       // Create checkbox.
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.className = 'schedule-builder-checkbox';
+      // Build className with base class and optional extra classes.
+      let checkboxClasses = 'schedule-builder-checkbox';
+      if (config.checkboxExtraClasses) {
+        checkboxClasses += ' ' + config.checkboxExtraClasses;
+      }
+      checkbox.className = checkboxClasses;
       checkbox.setAttribute('data-event-id', event.id);
       checkbox.setAttribute('aria-label', 'Select event: ' + (event.summary || 'Untitled'));
       
@@ -496,37 +501,35 @@
   };
 
   /**
-   * Create download button.
+   * Initialize download button from template.
    */
   Drupal.scheduleBuilder.createDownloadButton = function (blockId, config, events, selectedEvents) {
-    // Check if button already exists.
-    const existingButton = document.querySelector('[data-schedule-builder-download="' + blockId + '"]');
-    if (existingButton) {
+    // Find the button in the template.
+    const button = document.querySelector('[data-schedule-builder-download="' + blockId + '"]');
+    if (!button) {
+      console.warn('Schedule Builder: Download button not found in template for block: ' + blockId);
       return;
     }
 
-    // Create button container.
-    const container = document.querySelector('[data-block-id="' + blockId + '"]');
-    if (!container) {
+    // Check if button is already initialized.
+    if (button.dataset.initialized === 'true') {
       return;
     }
 
-    const buttonContainer = document.createElement('div');
-    buttonContainer.className = 'schedule-builder-download-container';
-    
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'schedule-builder-download-button';
-    button.setAttribute('data-schedule-builder-download', blockId);
-    button.textContent = 'Download Selected Events as ICS';
+    // Mark as initialized.
+    button.dataset.initialized = 'true';
+
+    // Set initial disabled state.
     button.disabled = selectedEvents.size === 0;
 
+    // Attach click handler.
+    // Use instance data to ensure we always have current state.
     button.addEventListener('click', function () {
-      Drupal.scheduleBuilder.downloadICS(blockId, config, events, selectedEvents);
+      const instance = window.scheduleBuilderInstances[blockId];
+      if (instance) {
+        Drupal.scheduleBuilder.downloadICS(blockId, config, instance.events, instance.selectedEvents);
+      }
     });
-
-    buttonContainer.appendChild(button);
-    container.appendChild(buttonContainer);
 
     // Update button state.
     Drupal.scheduleBuilder.updateDownloadButton(blockId, config);
