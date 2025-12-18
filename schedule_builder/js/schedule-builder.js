@@ -98,7 +98,7 @@
       }
     }
     
-    const eventContainers = searchContext.querySelectorAll(containerSelector);
+    const eventContainers = searchContext.querySelectorAll(config.selectors.eventContainer);
     const containersFound = eventContainers.length;
     const events = [];
 
@@ -312,7 +312,7 @@
       if (startEl) {
         // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
         const startValue = startEl.getAttribute('datetime') || startEl.dataset.startTime || startEl.getAttribute('data-start-time') || startEl.textContent.trim();
-        const startParsed = parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+        const startParsed = Drupal.scheduleBuilder.parseDateTime(startValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
         event.startTime = startParsed.dateTime;
         event.startTimeTimezone = startParsed.timezone;
       }
@@ -324,7 +324,7 @@
       if (endEl) {
         // Check datetime attribute first (standard HTML for <time> elements), then data attributes, then text content.
         const endValue = endEl.getAttribute('datetime') || endEl.dataset.endTime || endEl.getAttribute('data-end-time') || endEl.textContent.trim();
-        const endParsed = parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
+        const endParsed = Drupal.scheduleBuilder.parseDateTime(endValue, config.selectors.date ? container.querySelector(config.selectors.date) : null);
         event.endTime = endParsed.dateTime;
         event.endTimeTimezone = endParsed.timezone;
       }

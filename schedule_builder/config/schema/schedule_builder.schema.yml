@@ -2,6 +2,10 @@ block.settings.schedule_builder:
   type: block_settings
   label: 'Schedule Builder block settings'
   mapping:
+    search_context_selector:
+      type: string
+      label: 'Search context selector'
+      nullable: true
     event_container_selector:
       type: string
       label: 'Event container selector'
