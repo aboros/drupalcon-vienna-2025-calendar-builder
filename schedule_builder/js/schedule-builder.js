@@ -439,6 +439,9 @@
 
       // Insert checkbox at configured position.
       Drupal.scheduleBuilder.insertCheckbox(checkbox, container, config.checkboxPosition);
+
+      // Update selected class on container during initialization.
+      Drupal.scheduleBuilder.updateSelectedClass(container, event.id, selectedEvents, config);
     });
   };
 
@@ -457,6 +460,66 @@
         container.appendChild(checkbox);
       }
     }
+  };
+
+  /**
+   * Update the "schedule-builder-selected" class on an event container.
+   * Adds the class if the event is selected, removes it if not.
+   * Also applies/removes extra classes if configured.
+   */
+  Drupal.scheduleBuilder.updateSelectedClass = function (container, eventId, selectedEvents, config) {
+    if (!container || !eventId) {
+      return;
+    }
+
+    if (selectedEvents.has(eventId)) {
+      container.classList.add('schedule-builder-selected');
+      // Add extra classes if configured.
+      if (config && config.selectedItemExtraClasses) {
+        const extraClasses = config.selectedItemExtraClasses.trim().split(/\s+/);
+        extraClasses.forEach(function (className) {
+          if (className) {
+            container.classList.add(className);
+          }
+        });
+      }
+    } else {
+      container.classList.remove('schedule-builder-selected');
+      // Remove extra classes if configured.
+      if (config && config.selectedItemExtraClasses) {
+        const extraClasses = config.selectedItemExtraClasses.trim().split(/\s+/);
+        extraClasses.forEach(function (className) {
+          if (className) {
+            container.classList.remove(className);
+          }
+        });
+      }
+    }
+  };
+
+  /**
+   * Find and update the selected class for a specific event by ID.
+   */
+  Drupal.scheduleBuilder.updateSelectedClassForEvent = function (eventId, config, selectedEvents) {
+    // Determine search context.
+    let searchContext = document;
+    if (config.selectors.searchContext) {
+      const customContext = document.querySelector(config.selectors.searchContext);
+      if (customContext) {
+        searchContext = customContext;
+      }
+    }
+
+    const eventContainers = searchContext.querySelectorAll(config.selectors.eventContainer);
+    
+    eventContainers.forEach(function (container, containerIndex) {
+      // Extract event data from container to generate its ID.
+      const containerEvent = Drupal.scheduleBuilder.extractEventFromContainer(container, config, containerIndex);
+      
+      if (containerEvent.id === eventId) {
+        Drupal.scheduleBuilder.updateSelectedClass(container, eventId, selectedEvents, config);
+      }
+    });
   };
 
   /**
@@ -481,6 +544,9 @@
 
     // Update download button.
     Drupal.scheduleBuilder.updateDownloadButton(config.blockId, config);
+
+    // Update selected class on event container.
+    Drupal.scheduleBuilder.updateSelectedClassForEvent(eventId, config, selectedEvents);
   };
 
   /**
@@ -898,6 +964,9 @@
         if (checkbox) {
           checkbox.checked = true;
         }
+
+        // Update selected class on container.
+        Drupal.scheduleBuilder.updateSelectedClass(eventContainer, containerEvent.id, selectedEvents, config);
       }
     });
 
@@ -962,6 +1031,9 @@
         if (checkbox) {
           checkbox.checked = false;
         }
+
+        // Update selected class on container.
+        Drupal.scheduleBuilder.updateSelectedClass(eventContainer, containerEvent.id, selectedEvents, config);
       }
     });
 

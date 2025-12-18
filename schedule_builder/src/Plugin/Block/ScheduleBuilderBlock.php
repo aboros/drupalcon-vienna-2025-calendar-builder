@@ -84,6 +84,7 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       'filter_extra_classes' => '',
       'select_all_button_extra_classes' => '',
       'deselect_all_button_extra_classes' => '',
+      'selected_item_extra_classes' => '',
     ];
   }
 
@@ -299,6 +300,14 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       ],
     ];
 
+    $form['selected_item_extra_classes'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Extra Classes for Selected Items'),
+      '#description' => $this->t('Additional CSS classes to add to selected event containers in addition to the base "schedule-builder-selected" class (space-separated, e.g., "is-selected highlighted").'),
+      '#default_value' => $config['selected_item_extra_classes'],
+      '#required' => FALSE,
+    ];
+
     return $form;
   }
 
@@ -358,6 +367,7 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
     $this->setConfigurationValue('filter_extra_classes', $form_state->getValue('filter_extra_classes'));
     $this->setConfigurationValue('select_all_button_extra_classes', $form_state->getValue('select_all_button_extra_classes'));
     $this->setConfigurationValue('deselect_all_button_extra_classes', $form_state->getValue('deselect_all_button_extra_classes'));
+    $this->setConfigurationValue('selected_item_extra_classes', $form_state->getValue('selected_item_extra_classes'));
   }
 
   /**
@@ -409,6 +419,7 @@ class ScheduleBuilderBlock extends BlockBase implements ContainerFactoryPluginIn
       'icsFilename' => $config['ics_filename'],
       'checkboxPosition' => $config['checkbox_position'],
       'checkboxExtraClasses' => $config['checkbox_extra_classes'] ?: NULL,
+      'selectedItemExtraClasses' => $config['selected_item_extra_classes'] ?: NULL,
       'enableSelectionFilter' => !empty($config['enable_selection_filter']),
       'enableSelectActions' => !empty($config['enable_select_actions']),
     ];
