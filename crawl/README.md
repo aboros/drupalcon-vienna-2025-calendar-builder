@@ -2,6 +2,8 @@
 
 Fetches the official DrupalCon schedule HTML, converts it to `data/events.json`, and pushes to GitHub when the schedule changes. GitHub Pages continues to host the app; only the JSON file updates.
 
+Full change log and Pi setup notes: [`docs/`](../docs/README.md).
+
 ## Files
 
 | File | Purpose |
@@ -24,17 +26,13 @@ curl -fsSL -A "drupalcon-schedule-builder-crawl/1.0" \
 
 ## Pi deployment (GitHub Pages unchanged)
 
-1. **SSH deploy key on GitHub**  
-   On the Pi: `ssh-keygen -t ed25519 -f ~/.ssh/drupalcon_schedule -N ""`  
-   Add `~/.ssh/drupalcon_schedule.pub` as a **deploy key** on the repo (write access):  
-   `aboros/drupalcon-vienna-2025-calendar-builder`
+1. **Deploy key and clone** — see [docs/pi-crawl-setup.md](../docs/pi-crawl-setup.md) for the live Pi configuration (`github-drupalcon` SSH host, paths under `~/projects/`).
 
-2. **Clone the site repo** (separate from this monorepo if needed):
+2. **Clone** (if setting up a new machine):
 
    ```bash
-   GIT_SSH_COMMAND='ssh -i ~/.ssh/drupalcon_schedule -o IdentitiesOnly=yes' \
-     git clone git@github.com:aboros/drupalcon-vienna-2025-calendar-builder.git \
-     ~/drupalcon-vienna-2025-calendar-builder
+   git clone git@github-drupalcon:aboros/drupalcon-vienna-2025-calendar-builder.git \
+     ~/projects/drupalcon-vienna-2025-calendar-builder
    ```
 
 3. **Configure** (same clone includes `crawl/`):
@@ -62,7 +60,7 @@ curl -fsSL -A "drupalcon-schedule-builder-crawl/1.0" \
    ```
 
    ```cron
-   */15 * * * * GIT_SSH_COMMAND='ssh -i /home/pi/.ssh/drupalcon_schedule -o IdentitiesOnly=yes' /home/pi/drupalcon-vienna-2025-calendar-builder/crawl/crawl-and-publish.sh >> /home/pi/drupalcon-vienna-2025-calendar-builder/crawl/crawl.log 2>&1
+   */15 * * * * /home/piri/projects/drupalcon-vienna-2025-calendar-builder/crawl/crawl-and-publish.sh >> /home/piri/projects/drupalcon-vienna-2025-calendar-builder/crawl/crawl.log 2>&1
    ```
 
 ## Notes
