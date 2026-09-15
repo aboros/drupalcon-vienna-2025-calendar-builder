@@ -100,6 +100,6 @@ crontab -e
 | `0 events` / script exits 1 | Schedule HTML structure changed; update `convert_schedule.py` selectors or regex |
 | `Permission denied` on push | Wrong SSH key or deploy key removed from GitHub |
 | `git pull` conflicts in `crawl/` | Untracked files from an old rsync; remove `crawl/` and pull again, restore `config.local.sh` |
-| App still shows Vienna branding | Expected until `index.html` is updated; data may already be Rotterdam |
+| Stale page title in browser tab | Hard refresh or clear site data after deploy |
 
 See also [rotterdam-schedule-crawl.md](./rotterdam-schedule-crawl.md) for the overall design and file changes.

@@ -59,9 +59,12 @@ Event object shape is unchanged:
 
 Same converter logic as `crawl/convert_schedule.py`, with default paths still pointing at `source/*.html` for manual runs.
 
-### Not changed (yet)
+### Updated: app copy and ICS metadata
 
-- [`index.html`](../index.html) — still branded and titled for **DrupalCon Vienna 2025** (UI/copy update is a separate task).
+- [`index.html`](../index.html), [`manifest.json`](../manifest.json), and [`README.md`](../README.md) — Rotterdam 2026 branding, links, and ICS timezone (`Europe/Amsterdam`).
+
+### Unchanged
+
 - GitHub Pages URL and repo name remain `drupalcon-vienna-2025-calendar-builder`.
 
 ## Converter behaviour
@@ -73,7 +76,7 @@ The parser targets Drupal session markup: `div.node--type-session` and fields su
 - Vienna-style: `Tuesday, October 14, 2025 - 09:30 to Tuesday, October 14, 2025 - 18:00`
 - Rotterdam-style (same day): `Monday, September 28, 2026 - 08:45 to 17:00`
 
-Times are stored as local ISO strings (no timezone offset in JSON), consistent with the existing app and ICS generation (`Europe/Vienna` in the UI today; Rotterdam is CEST / `Europe/Amsterdam` on the website).
+Times are stored as local ISO strings (no timezone offset in JSON), consistent with the app and ICS generation using `Europe/Amsterdam` (CEST on the official schedule).
 
 ## Safety checks in `crawl-and-publish.sh`
 
