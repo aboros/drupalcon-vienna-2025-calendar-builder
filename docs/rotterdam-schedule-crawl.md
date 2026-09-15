@@ -65,7 +65,7 @@ Same converter logic as `crawl/convert_schedule.py`, with default paths still po
 
 ### Unchanged
 
-- GitHub Pages URL and repo name remain `drupalcon-vienna-2025-calendar-builder`.
+- GitHub repository: [aboros/drupalcon-schedule-builder](https://github.com/aboros/drupalcon-schedule-builder) — GitHub Pages at [aboros.github.io/drupalcon-schedule-builder](https://aboros.github.io/drupalcon-schedule-builder/).
 
 ## Converter behaviour
 

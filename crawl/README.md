@@ -31,24 +31,24 @@ curl -fsSL -A "drupalcon-schedule-builder-crawl/1.0" \
 2. **Clone** (if setting up a new machine):
 
    ```bash
-   git clone git@github-drupalcon:aboros/drupalcon-vienna-2025-calendar-builder.git \
-     ~/projects/drupalcon-vienna-2025-calendar-builder
+   git clone git@github-drupalcon:aboros/drupalcon-schedule-builder.git \
+     ~/projects/drupalcon-schedule-builder
    ```
 
 3. **Configure** (same clone includes `crawl/`):
 
    ```bash
-   cp ~/drupalcon-vienna-2025-calendar-builder/crawl/config.example.sh \
-      ~/drupalcon-vienna-2025-calendar-builder/crawl/config.local.sh
+   cp ~/projects/drupalcon-schedule-builder/crawl/config.example.sh \
+      ~/projects/drupalcon-schedule-builder/crawl/config.local.sh
    ```
 
-   Set `REPO_DIR` to the clone root and `VENV_DIR` to e.g. `~/drupalcon-vienna-2025-calendar-builder/crawl/venv`.
+   Set `REPO_DIR` to the clone root and `VENV_DIR` to e.g. `~/projects/drupalcon-schedule-builder/crawl/venv`.
 
 4. **Run once manually**:
 
    ```bash
-   chmod +x ~/drupalcon-vienna-2025-calendar-builder/crawl/crawl-and-publish.sh
-   ~/drupalcon-vienna-2025-calendar-builder/crawl/crawl-and-publish.sh
+   chmod +x ~/projects/drupalcon-schedule-builder/crawl/crawl-and-publish.sh
+   ~/projects/drupalcon-schedule-builder/crawl/crawl-and-publish.sh
    ```
 
    Confirm a commit on `main` and that GitHub Pages still serves the app with updated sessions.
@@ -60,7 +60,7 @@ curl -fsSL -A "drupalcon-schedule-builder-crawl/1.0" \
    ```
 
    ```cron
-   */15 * * * * /home/piri/projects/drupalcon-vienna-2025-calendar-builder/crawl/crawl-and-publish.sh >> /home/piri/projects/drupalcon-vienna-2025-calendar-builder/crawl/crawl.log 2>&1
+   */15 * * * * /home/piri/projects/drupalcon-schedule-builder/crawl/crawl-and-publish.sh >> /home/piri/projects/drupalcon-schedule-builder/crawl/crawl.log 2>&1
    ```
 
 ## Notes

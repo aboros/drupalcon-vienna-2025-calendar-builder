@@ -6,7 +6,7 @@ This documents the **production** crawl environment on the home Pi (`ssh pi`, us
 
 | Path | Description |
 |------|-------------|
-| `~/projects/drupalcon-vienna-2025-calendar-builder` | Git clone of [aboros/drupalcon-vienna-2025-calendar-builder](https://github.com/aboros/drupalcon-vienna-2025-calendar-builder) |
+| `~/projects/drupalcon-schedule-builder` | Git clone of [aboros/drupalcon-schedule-builder](https://github.com/aboros/drupalcon-schedule-builder) |
 | `…/crawl/crawl-and-publish.sh` | Cron-ready entry point |
 | `…/crawl/config.local.sh` | Local config (not in git) |
 | `…/crawl/venv/` | Python venv with BeautifulSoup |
@@ -14,7 +14,7 @@ This documents the **production** crawl environment on the home Pi (`ssh pi`, us
 
 ## GitHub authentication
 
-The Pi’s default GitHub key (`~/.ssh/id_ed25519_github`) is tied to another GitHub account and **cannot** push to `aboros/drupalcon-vienna-2025-calendar-builder`.
+The Pi’s default GitHub key (`~/.ssh/id_ed25519_github`) is tied to another GitHub account and **cannot** push to `aboros/drupalcon-schedule-builder`.
 
 A **deploy key** was added instead:
 
@@ -34,21 +34,21 @@ A **deploy key** was added instead:
 
   ```bash
   git remote -v
-  # origin  git@github-drupalcon:aboros/drupalcon-vienna-2025-calendar-builder.git
+  # origin  git@github-drupalcon:aboros/drupalcon-schedule-builder.git
   ```
 
 No `GIT_SSH_COMMAND` is required in cron when using this remote.
 
 ## Local configuration
 
-`~/projects/drupalcon-vienna-2025-calendar-builder/crawl/config.local.sh`:
+`~/projects/drupalcon-schedule-builder/crawl/config.local.sh`:
 
 ```bash
-REPO_DIR="/home/piri/projects/drupalcon-vienna-2025-calendar-builder"
+REPO_DIR="/home/piri/projects/drupalcon-schedule-builder"
 SCHEDULE_URL="https://events.drupal.org/rotterdam2026/schedule"
 GIT_REMOTE="origin"
 GIT_BRANCH="main"
-VENV_DIR="/home/piri/projects/drupalcon-vienna-2025-calendar-builder/crawl/venv"
+VENV_DIR="/home/piri/projects/drupalcon-schedule-builder/crawl/venv"
 CRAWL_USER_AGENT="drupalcon-schedule-builder-crawl/1.0"
 ```
 
@@ -57,7 +57,7 @@ Copy from [`crawl/config.example.sh`](../crawl/config.example.sh) if you need to
 ## Manual run
 
 ```bash
-ssh pi '~/projects/drupalcon-vienna-2025-calendar-builder/crawl/crawl-and-publish.sh'
+ssh pi '~/projects/drupalcon-schedule-builder/crawl/crawl-and-publish.sh'
 ```
 
 Expected outcomes:
@@ -68,7 +68,7 @@ Expected outcomes:
 After pulling script updates from GitHub on the Pi:
 
 ```bash
-cd ~/projects/drupalcon-vienna-2025-calendar-builder
+cd ~/projects/drupalcon-schedule-builder
 git pull origin main
 ```
 
@@ -83,7 +83,7 @@ crontab -e
 ```
 
 ```cron
-*/15 * * * * /home/piri/projects/drupalcon-vienna-2025-calendar-builder/crawl/crawl-and-publish.sh >> /home/piri/projects/drupalcon-vienna-2025-calendar-builder/crawl/crawl.log 2>&1
+*/15 * * * * /home/piri/projects/drupalcon-schedule-builder/crawl/crawl-and-publish.sh >> /home/piri/projects/drupalcon-schedule-builder/crawl/crawl.log 2>&1
 ```
 
 ## Rotating or replacing the deploy key

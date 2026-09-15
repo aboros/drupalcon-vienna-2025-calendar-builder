@@ -2,7 +2,7 @@
 
 A simple _"web application"_ for building personalized schedules for DrupalCon Rotterdam 2026.
 
-[See the app in action on GitHub Pages.](https://aboros.github.io/drupalcon-vienna-2025-calendar-builder/)
+[See the app in action on GitHub Pages.](https://aboros.github.io/drupalcon-schedule-builder/)
 
 ## Features
 

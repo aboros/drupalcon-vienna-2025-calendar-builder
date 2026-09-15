@@ -2,7 +2,7 @@
 # config.local.sh is gitignored.
 
 # Clone of the GitHub Pages repo (must be a git checkout with push access).
-REPO_DIR="/home/pi/drupalcon-vienna-2025-calendar-builder"
+REPO_DIR="/home/piri/projects/drupalcon-schedule-builder"
 
 # Official schedule page to crawl.
 SCHEDULE_URL="https://events.drupal.org/rotterdam2026/schedule"
